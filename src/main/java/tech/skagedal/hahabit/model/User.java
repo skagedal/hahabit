@@ -5,16 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table(name = "users")
-public class User {
+public record User(
     @Id
-    Long id;
-    String email;
-    String password;
-    LocalDateTime createdAt;
-    
-    public User(String email, String password, LocalDateTime createdAt) {
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-    }
-}
+    Long id,
+    String email,
+    String password,
+    LocalDateTime createdAt
+) { }
