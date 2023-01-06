@@ -1,6 +1,11 @@
 package tech.skagedal.hahabit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +14,7 @@ import org.springframework.data.util.Streamable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import tech.skagedal.hahabit.model.Achievement;
 import tech.skagedal.hahabit.model.Habit;
 import tech.skagedal.hahabit.model.User;
 import tech.skagedal.hahabit.repository.HabitRepository;
@@ -45,7 +51,7 @@ class HahabitApplicationTests {
 
         final var fetchedSimon = userRepository.findById(simon.id()).orElseThrow();
 
-        Assertions.assertEquals(
+        assertEquals(
             simon.email(),
             fetchedSimon.email()
         );
@@ -54,7 +60,7 @@ class HahabitApplicationTests {
     @Test
     @Transactional
     void createHabit() {
-        final var user = userRepository.save(User.create("skagedal2@gmail.com", "bestpassword"));
+        final var user = createExampleUser();
 
         final var habit = habitRepository.save(Habit.create(
             user.id(),
@@ -65,5 +71,25 @@ class HahabitApplicationTests {
 
         System.out.println(habit);
         System.out.println(fetchedHabit);
+    }
+
+    @Test
+    @Transactional
+    void createHabitWithAchievements() {
+        final var user = createExampleUser();
+        final var habit = habitRepository.save(Habit.create(
+            user.id(),
+            "Be outside every day"
+        ));
+        final var achievedHabit = habitRepository.save(habit.withAchievements(
+            List.of(Achievement.create(LocalDate.of(2023, 1, 6)))
+        ));
+
+        assertEquals(1, achievedHabit.achievements().size());
+    }
+
+    @NotNull
+    private User createExampleUser() {
+        return userRepository.save(User.create("skagedal@gmail.com", "bestpassword"));
     }
 }
