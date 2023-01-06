@@ -37,10 +37,13 @@ class HahabitApplicationTests {
     @Test
     @Transactional
     void createUser() {
-        final var simon = new User(null, "skagedal@gmail.com", "bestpassword", LocalDateTime.now());
-        final var savedSimon = userRepository.save(simon);
+        final var simon = userRepository.save(
+            User.create(
+                "skagedal@gmail.com",
+                "bestpassword"
+            ));
 
-        final var fetchedSimon = userRepository.findById(savedSimon.id()).orElseThrow();
+        final var fetchedSimon = userRepository.findById(simon.id()).orElseThrow();
 
         Assertions.assertEquals(
             simon.email(),
@@ -51,13 +54,11 @@ class HahabitApplicationTests {
     @Test
     @Transactional
     void createHabit() {
-        final var user = userRepository.save(new User(null, "skagedal2@gmail.com", "bestpassword", LocalDateTime.now()));
+        final var user = userRepository.save(User.create("skagedal2@gmail.com", "bestpassword"));
 
-        final var habit = habitRepository.save(new Habit(
-            null,
+        final var habit = habitRepository.save(Habit.create(
             user.id(),
-            "Be outside every day",
-            null
+            "Be outside every day"
         ));
 
         final var fetchedHabit = habitRepository.findById(habit.id()).orElseThrow();
