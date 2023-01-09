@@ -6,25 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import tech.skagedal.hahabit.model.Achievement;
 import tech.skagedal.hahabit.model.Habit;
-import tech.skagedal.hahabit.model.User;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
-import tech.skagedal.hahabit.repository.UserRepository;
 import tech.skagedal.hahabit.testing.Containers;
 
 @SpringBootTest
 class HahabitApplicationTests {
     @Autowired
-    UserRepository users;
+    UserDetailsManager userDetailsManager;
 
     @Autowired
     HabitRepository habits;
@@ -43,30 +42,22 @@ class HahabitApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    @Transactional
-    void createUser() {
-        final var simon = users.save(
-            User.create(
-                "skagedal@gmail.com",
-                "bestpassword"
-            ));
-
-        final var fetchedSimon = users.findById(simon.id()).orElseThrow();
-
-        assertEquals(
-            simon.email(),
-            fetchedSimon.email()
-        );
+    private void createSimonUser() {
+        final var simon = User.withDefaultPasswordEncoder()
+            .username("simon")
+            .password("bestpassword")
+            .roles("USER")
+            .build();
+        userDetailsManager.createUser(simon);
     }
 
     @Test
     @Transactional
     void createHabitAndAchievement() {
-        final var user = users.save(User.create("skagedal2@gmail.com", "bestpassword"));
+        createSimonUser();
 
         final var habit = habits.save(Habit.create(
-            user.id(),
+            "simon",
             "Be outside every day"
         ));
 
