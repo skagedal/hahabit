@@ -5,11 +5,13 @@
     <title>Habits</title>
 </head>
 <body>
-    <h2>Your habits</h2>
-    <ul>
-        <li th:each="habit: ${habits}" th:text="${habit.description}">Some habit</li>
-    </ul>
-    <label>Add new habit: <input></label>
-    <button>Add</button>
+<h2>Your habits</h2>
+<ul>
+    <li th:each="habit: ${habits}" th:text="${habit.description}">Some habit</li>
+</ul>
+<form th:action="@{/habits}" method="post">
+    <label>Add new habit: <input type="text" name="description"></label>
+    <input type="submit" value="Add">
+</form>
 </body>
 </html>
