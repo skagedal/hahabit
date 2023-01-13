@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <title>Spring Security Example</title>
-    </head>
-    <body>
-        <h1>hahabit</h1>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>hahabit</title>
+</head>
+<body>
+<h1>hahabit</h1>
+<h2 th:text="${date}">1970-01-02</h2>
+<ul>
+    <li th:each="habit: ${habits}">
+        <span th:if="${habit.achieved}">✅ <span th:text="${habit.description}">Take a walk</span></span>
+        <span th:unless="${habit.achieved}">😐 <span th:text="${habit.description}">Take a walk</span></span>
+    </li>
+</ul>
 
-        <p><a th:href="@{/habits}">Manage my habits</a></p>
-    </body>
+<p><a th:href="@{/habits}">Manage my habits</a></p>
+</body>
 </html>
