@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-import tech.skagedal.hahabit.model.Achievement;
 import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
@@ -15,11 +14,9 @@ import tech.skagedal.hahabit.repository.HabitRepository;
 @Controller
 public class HomeController {
     private final HabitRepository habits;
-    private final AchievementRepository achievements;
 
     public HomeController(HabitRepository habits, AchievementRepository achievements) {
         this.habits = habits;
-        this.achievements = achievements;
     }
 
     @GetMapping("/")
@@ -37,16 +34,6 @@ public class HomeController {
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
-        return habits.findAllByOwnedBy(principal.getName())
-            .stream()
-            .map(habit -> new HabitForDate(
-                habit.id(),
-                habit.description(),
-                date,
-                achievements.findOneByAchievingHabitAndDate(habit.id(), date)
-                    .map(Achievement::id)
-                    .orElse(null)
-            ))
-            .toList();
+        return habits.findHabitsForDate(principal.getName(), date);
     }
 }
