@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>hahabit</title>
+    <script>
+        document.cookie = 'zoneId=' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+    </script>
 </head>
 <body>
 <h1>hahabit</h1>
@@ -15,5 +18,6 @@
 </ul>
 
 <p><a th:href="@{/habits}">Manage my habits</a></p>
+<p>Timezone ID: <span th:text="${zoneId}">Unknown</span></p>
 </body>
 </html>
