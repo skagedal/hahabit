@@ -15,7 +15,7 @@ import tech.skagedal.hahabit.repository.HabitRepository;
 public class HomeController {
     private final HabitRepository habits;
 
-    public HomeController(HabitRepository habits, AchievementRepository achievements) {
+    public HomeController(HabitRepository habits) {
         this.habits = habits;
     }
 
