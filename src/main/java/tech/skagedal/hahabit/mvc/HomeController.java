@@ -8,7 +8,10 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
 import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.repository.HabitRepository;
 
@@ -31,6 +34,14 @@ public class HomeController {
                 "habits", getHabitsForDate(principal, date)
             )
         );
+    }
+
+    private record AchieveForm(String habitId, LocalDate date) {}
+
+    @PostMapping("/achieve")
+    View achieve(Principal principal, AchieveForm achieveForm) {
+        System.out.println("Achieve: " + achieveForm);
+        return new RedirectView("/");
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
