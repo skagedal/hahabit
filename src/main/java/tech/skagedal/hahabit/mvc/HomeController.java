@@ -38,10 +38,10 @@ public class HomeController {
 
     private record AchieveForm(String habitId, LocalDate date) {}
 
-    @PostMapping("/achieve")
-    View achieve(Principal principal, AchieveForm achieveForm) {
+    @PostMapping("/achieve/{habitId}/{date}/achieve")
+    ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
         System.out.println("Achieve: " + achieveForm);
-        return new RedirectView("/");
+        return new ModelAndView(new RedirectView("/"));
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
