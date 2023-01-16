@@ -40,6 +40,10 @@ dependencyManagement {
 	}
 }
 
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
