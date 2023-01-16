@@ -13,7 +13,7 @@
 <ul>
     <li th:each="habit: ${habits}">
         <span th:if="${habit.achieved}">✅ <span th:text="${habit.description}">Take a walk</span></span>
-        <form th:unless="${habit.achieved}" th:action="@{/achieve/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
+        <form th:unless="${habit.achieved}" th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
             <input type="submit" th:value="${habit.description}">
         </form>
     </li>
