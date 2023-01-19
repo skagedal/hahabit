@@ -11,3 +11,6 @@ echo
 echo 👋 Uploading JAR and run script to skagedal.tech...
 scp -i ~/.ssh/hahabit-key build/libs/hahabit-0.0.1-SNAPSHOT.jar hahabit@skagedal.tech: 
 scp -i ~/.ssh/hahabit-key server-scripts/run.sh hahabit@skagedal.tech:
+
+echo 👋 Sending SIGTERM to running service...
+ssh -i ~/.ssh/hahabit-key hahabit@skagedal.tech pkill -TERM -f hahabit-0.0.1
