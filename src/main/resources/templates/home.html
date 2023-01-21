@@ -1,25 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <title>hahabit</title>
     <script>
         document.cookie = 'zoneId=' + Intl.DateTimeFormat().resolvedOptions().timeZone;
     </script>
 </head>
 <body>
-<h1>hahabit</h1>
-<h2 th:text="${date}">1970-01-02</h2>
-<ul>
-    <li th:each="habit: ${habits}">
-        <span th:if="${habit.achieved}">✅ <span th:text="${habit.description}">Take a walk</span></span>
-        <form th:unless="${habit.achieved}" th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
-            <input type="submit" th:value="${habit.description}">
-        </form>
-    </li>
-</ul>
+<header class="container">
+    hahabit
+</header>
+<main class="container">
+    <section id="habits">
+        <h2 th:text="${date}">1970-01-02</h2>
+        <div th:each="habit: ${habits}">
+            <form th:if="${habit.achieved}">
+                <input
+                        type="submit"
+                        value="Take a walk"
+                        th:value="${habit.description}" disabled="true"
+                >
+            </form>
+            <form th:unless="${habit.achieved}"
+                  th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
+                <input type="submit" value="Eat food" th:value="${habit.description}">
+            </form>
+        </div>
+    </section>
 
-<p><a th:href="@{/habits}">Manage my habits</a></p>
-<p>Timezone ID: <span th:text="${zoneId}">Unknown</span></p>
+    <section id="nav">
+        <p><a th:href="@{/habits}">Manage my habits</a></p>
+    </section>
+
+    <footer>
+        Timezone ID: <span th:text="${zoneId}">Unknown</span>
+    </footer>
+</main>
 </body>
 </html>

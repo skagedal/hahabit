@@ -2,16 +2,29 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Habits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <title>hahabit: Manage your habits</title>
 </head>
 <body>
-<h2>Your habits</h2>
-<ul>
-    <li th:each="habit: ${habits}" th:text="${habit.description}">Some habit</li>
-</ul>
-<form th:action="@{/habits}" method="post">
-    <label>Add new habit: <input type="text" name="description"></label>
-    <input type="submit" value="Add">
-</form>
+<header class="container">
+    hahabit
+</header>
+<main class="container">
+    <section id="habits">
+        <h2>Your habits</h2>
+        <ul>
+            <li th:each="habit: ${habits}" th:text="${habit.description}">Some habit</li>
+        </ul>
+        <form th:action="@{/habits}" method="post">
+            <label>Add new habit: <input type="text" name="description"></label>
+            <input type="submit" value="Add">
+        </form>
+    </section>
+
+    <section id="nav">
+        <p><a th:href="@{/}">Home</a></p>
+    </section>
+</main>
 </body>
 </html>
