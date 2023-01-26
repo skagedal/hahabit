@@ -31,12 +31,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-	}
+	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
 }
 
 tasks.withType(JavaCompile).configureEach {
