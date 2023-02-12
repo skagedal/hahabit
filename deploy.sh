@@ -25,7 +25,7 @@ echo
 echo "👋 Waiting for commit $(git rev-parse --short HEAD) to come up..."
 while true; do
     sleep 2
-    if [ "$(curl -s https://hahabit.skagedal.tech/actuator/info | jq -r .git.commit.id)" = "$(git rev-parse --short HEAD)" ]; then
+    if [ "$(curl -s https://hahabit.skagedal.tech/actuator/info | jq -r .git.commit.id >& /dev/null)" = "$(git rev-parse --short HEAD)" ]; then
         echo "Done!"
         exit 0
     else
