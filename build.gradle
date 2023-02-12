@@ -3,6 +3,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.2'
+	id "com.gorylenko.gradle-git-properties" version "2.4.1"
 	id "com.github.ben-manes.versions" version '0.45.0'
 }
 
@@ -24,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.flywaydb:flyway-core'
 	// Because of https://github.com/spring-projects/spring-framework/issues/25095
