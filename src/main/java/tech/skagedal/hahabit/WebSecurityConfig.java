@@ -21,11 +21,13 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf().disable().cors().disable()
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/actuator/*").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(Customizer.withDefaults());
+            .formLogin(Customizer.withDefaults())
+            .httpBasic();
 
         return http.build();
     }
