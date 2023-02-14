@@ -5,6 +5,7 @@ plugins {
 	id 'org.springframework.boot' version '3.0.2'
 	id "com.gorylenko.gradle-git-properties" version "2.4.1"
 	id "com.github.ben-manes.versions" version '0.45.0'
+	id 'jacoco'
 }
 
 group = 'tech.skagedal'
@@ -44,4 +45,12 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
 }
