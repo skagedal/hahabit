@@ -10,8 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import tech.skagedal.hahabit.testing.Containers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HabitRestControllerTest {
@@ -22,12 +26,23 @@ class HabitRestControllerTest {
         .version(HttpClient.Version.HTTP_1_1)
         .build();
 
+    @DynamicPropertySource
+    static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", () -> Containers.postgres().getJdbcUrl());
+        registry.add("spring.datasource.username", () -> Containers.postgres().getUsername());
+        registry.add("spring.datasource.password", () -> Containers.postgres().getPassword());
+    }
+
     // Tests
 
     @Test
     void getHome() throws IOException, InterruptedException {
-        final var result = httpClient.send(get(uri("/")).build(), HttpResponse.BodyHandlers.discarding());
+        final var result = httpClient.send(get(uri("/"))
+            .header(HttpHeaders.AUTHORIZATION, "Basic YWRtaW46YWRtaW4=")
+            .build(), HttpResponse.BodyHandlers.discarding());
+
         Assertions.assertEquals(HttpStatus.OK, HttpStatus.resolve(result.statusCode()));
+        Assertions.assertEquals("text/html;charset=UTF-8", result.headers().firstValue("Content-Type").orElse(null));
     }
 
 

@@ -25,7 +25,8 @@ public class WebSecurityConfig {
                 .requestMatchers("/actuator/*").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(Customizer.withDefaults());
+            .formLogin(Customizer.withDefaults())
+            .httpBasic();
 
         return http.build();
     }
