@@ -21,7 +21,7 @@ import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.testing.Containers;
 
 @SpringBootTest
-class HahabitApplicationTests {
+class RepositoryTests {
     @Autowired
     UserDetailsManager userDetailsManager;
 
