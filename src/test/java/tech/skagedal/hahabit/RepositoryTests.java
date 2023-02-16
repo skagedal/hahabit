@@ -33,9 +33,7 @@ class RepositoryTests {
 
     @DynamicPropertySource
     static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> Containers.postgres().getJdbcUrl());
-        registry.add("spring.datasource.username", () -> Containers.postgres().getUsername());
-        registry.add("spring.datasource.password", () -> Containers.postgres().getPassword());
+        Containers.registerDynamicProperties(registry);
     }
 
     @Test
