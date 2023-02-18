@@ -51,10 +51,10 @@ class RepositoryTests {
     @Test
     @Transactional
     void createHabitAndAchievement() {
-        testDataManager.createSimonUser();
+        final var username = testDataManager.createRandomUser();
 
         final var habit = habits.save(Habit.create(
-            "simon",
+            username,
             "Be outside every day"
         ));
 

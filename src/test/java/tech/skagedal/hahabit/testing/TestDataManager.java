@@ -1,24 +1,29 @@
 package tech.skagedal.hahabit.testing;
 
+import java.util.UUID;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class TestDataManager {
+    private static String PASSWORD = "password";
+
     private final UserDetailsManager userDetailsManager;
 
     public TestDataManager(UserDetailsManager userDetailsManager) {
         this.userDetailsManager = userDetailsManager;
     }
 
-    public void createSimonUser() {
+    public String createRandomUser() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        final var simon = User.builder().passwordEncoder(encoder::encode)
-            .username("simon")
-            .password("bestpassword")
+        final var username = UUID.randomUUID().toString();
+        final var user = User.builder().passwordEncoder(encoder::encode)
+            .username(username)
+            .password(PASSWORD)
             .roles("USER")
             .build();
-        userDetailsManager.createUser(simon);
+        userDetailsManager.createUser(user);
+        return username;
     }
 }
