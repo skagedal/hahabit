@@ -1,8 +1,9 @@
 package tech.skagedal.hahabit.testing;
 
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Component;
 
 public class TestDataManager {
     private final UserDetailsManager userDetailsManager;
@@ -12,7 +13,8 @@ public class TestDataManager {
     }
 
     public void createSimonUser() {
-        final var simon = User.withDefaultPasswordEncoder()
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        final var simon = User.builder().passwordEncoder(encoder::encode)
             .username("simon")
             .password("bestpassword")
             .roles("USER")
