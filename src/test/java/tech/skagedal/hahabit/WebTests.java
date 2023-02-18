@@ -64,15 +64,6 @@ public class WebTests {
             .hasValue(uri("/login").toString());
     }
 
-    static final class MyExtendedPage extends HtmlPage {
-        public MyExtendedPage(WebResponse webResponse,
-                              WebWindow webWindow) {
-            super(webResponse, webWindow);
-        }
-
-        public void foobar() {}
-    }
-
     @Test
     void can_login() throws IOException {
         final HtmlPage start = webClient.getPage(url("/"));
