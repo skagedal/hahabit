@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -19,6 +19,7 @@ import tech.skagedal.hahabit.model.Habit;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.testing.Containers;
+import tech.skagedal.hahabit.testing.TestDataManager;
 
 @SpringBootTest
 class RepositoryTests {
@@ -31,6 +32,13 @@ class RepositoryTests {
     @Autowired
     AchievementRepository achievements;
 
+    private TestDataManager testDataManager;
+
+    @BeforeEach
+    void setupTestDataManager() {
+        testDataManager = new TestDataManager(userDetailsManager);
+    }
+
     @DynamicPropertySource
     static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
         Containers.registerDynamicProperties(registry);
@@ -40,19 +48,10 @@ class RepositoryTests {
     void contextLoads() {
     }
 
-    private void createSimonUser() {
-        final var simon = User.withDefaultPasswordEncoder()
-            .username("simon")
-            .password("bestpassword")
-            .roles("USER")
-            .build();
-        userDetailsManager.createUser(simon);
-    }
-
     @Test
     @Transactional
     void createHabitAndAchievement() {
-        createSimonUser();
+        testDataManager.createSimonUser();
 
         final var habit = habits.save(Habit.create(
             "simon",
