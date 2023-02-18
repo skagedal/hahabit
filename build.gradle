@@ -37,6 +37,7 @@ dependencies {
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
+	testImplementation('net.sourceforge.htmlunit:htmlunit:2.70.0')
 }
 
 tasks.withType(JavaCompile).configureEach {
