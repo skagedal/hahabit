@@ -8,6 +8,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -72,7 +73,7 @@ public class WebTests {
     }
 
     @Test
-    void can_login_and_add_a_habit() throws IOException {
+    void can_login_add_a_habit_and_achieve_it() throws IOException {
         final var username = testDataManager.createRandomUser();
 
         final HtmlPage start = webClient.getPage(url("/"));
@@ -108,7 +109,16 @@ public class WebTests {
         final HtmlAnchor homeLink = manageHabitsPageAfterAddingHabit.getAnchorByHref("/");
         final HtmlPage home = homeLink.click();
 
-        System.out.println(home.asXml());
+        // Achieve the habit
+        final HtmlForm addAchievementForm = home.getForms().get(0);
+        final HtmlSubmitInput achieveHabit = addAchievementForm.getFirstByXPath("//input[@type='submit']");
+        assertThat(achieveHabit.isDisabled()).isFalse();
+
+        final HtmlPage pageAfterAchievedHabit = achieveHabit.click();
+
+        final HtmlForm addAchievementFormAfterAchieved = pageAfterAchievedHabit.getForms().get(0);
+        final HtmlSubmitInput achieveHabitAfterAchieved = addAchievementFormAfterAchieved.getFirstByXPath("//input[@type='submit']");
+        assertThat(achieveHabitAfterAchieved.isDisabled()).isTrue();
     }
 
     // Helpers
