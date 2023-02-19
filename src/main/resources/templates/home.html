@@ -6,7 +6,10 @@
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <title>hahabit</title>
     <script>
-        document.cookie = 'zoneId=' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (timeZone !== undefined) {
+            document.cookie = 'zoneId=' + timeZone;
+        }
     </script>
 </head>
 <body>

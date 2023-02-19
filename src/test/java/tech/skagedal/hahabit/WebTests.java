@@ -103,6 +103,12 @@ public class WebTests {
         final HtmlPage manageHabitsPageAfterAddingHabit = addHabitButton.click();
 
         assertThat(manageHabitsPageAfterAddingHabit.asNormalizedText()).contains("Go for a walk");
+
+        // Go back to home
+        final HtmlAnchor homeLink = manageHabitsPageAfterAddingHabit.getAnchorByHref("/");
+        final HtmlPage home = homeLink.click();
+
+        System.out.println(home.asXml());
     }
 
     // Helpers
