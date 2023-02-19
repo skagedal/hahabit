@@ -3,6 +3,7 @@ package tech.skagedal.hahabit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -80,11 +81,17 @@ public class WebTests {
         final HtmlPasswordInput passwordField = signInForm.getInputByName("password");
         final HtmlButton button = signInForm.getFirstByXPath("//button[@type='submit']");
 
+        // Log in
         usernameField.type(username);
         passwordField.type(TestDataManager.PASSWORD);
         final HtmlPage loggedInPage = button.click();
-
         assertThat(loggedInPage.asNormalizedText()).contains("Manage my habits");
+
+        // Go to "Manage my habits"
+        final HtmlAnchor manageHabitsLink = loggedInPage.getFirstByXPath("//a[@id='manage-habits']");
+        final HtmlPage manageHabits = manageHabitsLink.click();
+
+        System.out.println(manageHabits.asXml());
     }
 
     // Helpers
