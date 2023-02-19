@@ -16,25 +16,38 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import tech.skagedal.hahabit.testing.Containers;
+import tech.skagedal.hahabit.testing.TestDataManager;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class WebTests {
     @Autowired
+    UserDetailsManager userDetailsManager;
+
+    @Autowired
     private ServletWebServerApplicationContext servletContext;
+
+    private TestDataManager testDataManager;
 
     private final HttpClient httpClient = HttpClient.newBuilder()
         .version(HttpClient.Version.HTTP_1_1)
         .build();
 
     private final WebClient webClient = new WebClient();
+
+    @BeforeEach
+    void setupTestDataManager() {
+        testDataManager = new TestDataManager(userDetailsManager);
+    }
 
     @AfterEach
     void closeWebClient() {
@@ -59,14 +72,16 @@ public class WebTests {
 
     @Test
     void can_login() throws IOException {
+        final var username = testDataManager.createRandomUser();
+
         final HtmlPage start = webClient.getPage(url("/"));
         final HtmlForm signInForm = start.getForms().get(0);
-        final HtmlTextInput username = signInForm.getInputByName("username");
-        final HtmlPasswordInput password = signInForm.getInputByName("password");
+        final HtmlTextInput usernameField = signInForm.getInputByName("username");
+        final HtmlPasswordInput passwordField = signInForm.getInputByName("password");
         final HtmlButton button = signInForm.getFirstByXPath("//button[@type='submit']");
 
-        username.type("admin");
-        password.type("admin");
+        usernameField.type(username);
+        passwordField.type(TestDataManager.PASSWORD);
         final HtmlPage loggedInPage = button.click();
 
         assertThat(loggedInPage.asNormalizedText()).contains("Manage my habits");

@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class TestDataManager {
-    private static String PASSWORD = "password";
+    public static String PASSWORD = "password";
 
     private final UserDetailsManager userDetailsManager;
 
