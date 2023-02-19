@@ -72,26 +72,37 @@ public class WebTests {
     }
 
     @Test
-    void can_login() throws IOException {
+    void can_login_and_add_a_habit() throws IOException {
         final var username = testDataManager.createRandomUser();
 
         final HtmlPage start = webClient.getPage(url("/"));
+
+        // Log in
         final HtmlForm signInForm = start.getForms().get(0);
         final HtmlTextInput usernameField = signInForm.getInputByName("username");
         final HtmlPasswordInput passwordField = signInForm.getInputByName("password");
         final HtmlButton button = signInForm.getFirstByXPath("//button[@type='submit']");
 
-        // Log in
         usernameField.type(username);
         passwordField.type(TestDataManager.PASSWORD);
         final HtmlPage loggedInPage = button.click();
+
         assertThat(loggedInPage.asNormalizedText()).contains("Manage my habits");
 
         // Go to "Manage my habits"
         final HtmlAnchor manageHabitsLink = loggedInPage.getFirstByXPath("//a[@id='manage-habits']");
+
         final HtmlPage manageHabits = manageHabitsLink.click();
 
-        System.out.println(manageHabits.asXml());
+        // Add a new habit
+        final HtmlForm addHabitForm = manageHabits.getForms().get(0);
+        final HtmlTextInput habitDescriptionField = addHabitForm.getInputByName("description");
+        final HtmlButton addHabitButton = addHabitForm.getFirstByXPath("//button[@type='submit']");
+
+        habitDescriptionField.type("Go for a walk");
+        final HtmlPage manageHabitsPageAfterAddingHabit = addHabitButton.click();
+
+        assertThat(manageHabitsPageAfterAddingHabit.asNormalizedText()).contains("Go for a walk");
     }
 
     // Helpers
