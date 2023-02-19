@@ -16,9 +16,9 @@ public class TestDataManager {
     }
 
     public String createRandomUser() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        final var passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         final var username = UUID.randomUUID().toString();
-        final var user = User.builder().passwordEncoder(encoder::encode)
+        final var user = User.builder().passwordEncoder(passwordEncoder::encode)
             .username(username)
             .password(PASSWORD)
             .roles("USER")
