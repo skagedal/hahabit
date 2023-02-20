@@ -1,4 +1,4 @@
-package tech.skagedal.hahabit.mvc;
+package tech.skagedal.hahabit.web;
 
 import java.security.Principal;
 import java.util.Map;
