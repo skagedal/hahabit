@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -40,6 +41,29 @@ public class ApiTests {
     static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
         Containers.registerDynamicProperties(registry);
     }
+
+    @Test
+    void apis_get_unauthorized_response() {
+        final var response = send(GET(uri("/")).build());
+
+        assertThat(response.statusCode())
+            .isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.headers().firstValue("WWW-Authenticate"))
+            .isPresent()
+            .hasValueSatisfying(value -> assertThat(value).startsWith("Basic"));
+    }
+
+    @Test
+    void home_redirects_to_login_in_browsers() {
+        final var responseAcceptingHtml = send(GET(uri("/")).header("Accept", "text/html").build());
+
+        assertThat(responseAcceptingHtml.statusCode())
+            .isEqualTo(HttpStatus.FOUND.value()); // that's a 302 redirect
+        assertThat(responseAcceptingHtml.headers().firstValue("Location"))
+            .isPresent()
+            .hasValue(uri("/login").toString());
+    }
+
 
     @Test
     void create_habit() {
