@@ -1,5 +1,7 @@
 package tech.skagedal.hahabit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -41,9 +43,22 @@ public class ApiTests {
 
     @Test
     void create_habit() {
+        final var username = testDataManager.createRandomUser();
 
+        final var response = send(
+            POST(
+                uri("/api/habits"),
+                """
+                   {
+                       "description": "Go for a walk",
+                   }
+                """
+            )
+                .header("Authorization", testDataManager.authHeader(username))
+                .build());
+
+        assertThat(response.statusCode()).isEqualTo(200);
     }
-
 
     // Helpers
 
@@ -61,5 +76,12 @@ public class ApiTests {
 
     private static HttpRequest.Builder GET(URI uri) {
         return HttpRequest.newBuilder(uri).GET();
+    }
+
+    private static HttpRequest.Builder POST(URI uri, String json) {
+        return HttpRequest
+            .newBuilder(uri)
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .header("content-type", "application/json");
     }
 }

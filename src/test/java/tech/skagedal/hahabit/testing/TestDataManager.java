@@ -1,15 +1,16 @@
 package tech.skagedal.hahabit.testing;
 
+import java.util.Base64;
 import java.util.UUID;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class TestDataManager {
     public static String PASSWORD = "password";
 
     private final UserDetailsManager userDetailsManager;
+    private final Base64.Encoder base64Encoder = Base64.getEncoder();
 
     public TestDataManager(UserDetailsManager userDetailsManager) {
         this.userDetailsManager = userDetailsManager;
@@ -25,5 +26,9 @@ public class TestDataManager {
             .build();
         userDetailsManager.createUser(user);
         return username;
+    }
+
+    public String authHeader(String username) {
+        return "Basic " + base64Encoder.encodeToString((username + ":" + PASSWORD).getBytes());
     }
 }
