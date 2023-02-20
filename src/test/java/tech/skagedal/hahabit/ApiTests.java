@@ -74,14 +74,15 @@ public class ApiTests {
                 uri("/api/habits"),
                 """
                    {
-                       "description": "Go for a walk",
+                       "description": "Go for a walk"
                    }
                 """
             )
                 .header("Authorization", testDataManager.authHeader(username))
                 .build());
 
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.statusCode()).isEqualTo(201);
+        System.out.println(response.body());
     }
 
     // Helpers
