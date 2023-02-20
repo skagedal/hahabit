@@ -69,21 +69,35 @@ public class ApiTests {
     void create_habit() {
         final var username = testDataManager.createRandomUser();
 
-        final var response = send(
-            POST(
-                uri("/api/habits"),
-                """
+        final var createHabitResponse = send(createHabit(username));
+        assertThat(createHabitResponse.statusCode()).isEqualTo(201);
+
+        final var getHabitsResponse = send(getHabits(username));
+
+        System.out.println(createHabitResponse.body());
+    }
+
+    private HttpRequest createHabit(String username) {
+        return POST(
+            uri("/api/habits"),
+            """
                    {
                        "description": "Go for a walk"
                    }
                 """
-            )
-                .header("Authorization", testDataManager.authHeader(username))
-                .build());
-
-        assertThat(response.statusCode()).isEqualTo(201);
-        System.out.println(response.body());
+        )
+            .header("Authorization", testDataManager.authHeader(username))
+            .build();
     }
+
+    private HttpRequest getHabits(String username) {
+        return GET(uri("/api/habits"))
+            .header("Authorization", testDataManager.authHeader(username))
+            .build();
+    }
+
+    // API calls
+
 
     // Helpers
 
@@ -97,6 +111,23 @@ public class ApiTests {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private <T> HttpResponse<T> sendGetJson(HttpRequest request) {
+        try {
+            return httpClient.send(request, bodyhandler());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private <T> HttpResponse.BodyHandler<T> bodyhandler() {
+        return responseInfo -> {
+            if (responseInfo.statusCode() >= 200 && responseInfo.statusCode() < 300) {
+                return HttpResponse.BodyHandlers.ofString();
+            }
+        };
     }
 
     private static HttpRequest.Builder GET(URI uri) {
