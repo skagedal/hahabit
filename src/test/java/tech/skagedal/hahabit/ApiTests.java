@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import tech.skagedal.hahabit.http.BodyMapper;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
@@ -25,6 +26,9 @@ public class ApiTests {
 
     @Autowired
     private ServletWebServerApplicationContext servletContext;
+
+    @Autowired
+    private BodyMapper bodyMapper;
 
     private TestDataManager testDataManager;
 
