@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,20 +74,49 @@ public class ApiTests {
     void create_habit() {
         final var username = testDataManager.createRandomUser();
 
-        final var response = send(
+        final var habitsBefore = getHabits(username);
+        assertThat(habitsBefore).isEmpty();
+
+        createHabit(username, "Go for a walk");
+
+        final var habitsAfter = getHabits(username);
+        assertThat(habitsAfter).hasSize(1);
+        assertThat(habitsAfter.get(0)).extracting(Habit::description).isEqualTo("Go for a walk");
+    }
+
+    // Client methods
+
+    record Habit(Long id, String description) { }
+
+    void createHabit(String username, String description) {
+        record Request(String description) { }
+        record Response() { }
+
+        final var response = sendReceiving(
+            Response.class,
             POST(
                 uri("/api/habits"),
-                """
-                   {
-                       "description": "Go for a walk"
-                   }
-                """
+                new Request(description)
             )
                 .header("Authorization", testDataManager.authHeader(username))
-                .build());
+                .build()
+        );
 
         assertThat(response.statusCode()).isEqualTo(201);
-        System.out.println(response.body());
+    }
+
+    List<Habit> getHabits(String username) {
+        record GetHabitsResponse(List<Habit> habits) { }
+
+        final var response = sendReceiving(
+            GetHabitsResponse.class,
+            GET(uri("/api/habits"))
+                .header("Authorization", testDataManager.authHeader(username))
+                .build()
+        );
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        return response.body().habits;
     }
 
     // Helpers
@@ -103,14 +133,22 @@ public class ApiTests {
         }
     }
 
-    private static HttpRequest.Builder GET(URI uri) {
+    private <T> HttpResponse<T> sendReceiving(Class<T> type, HttpRequest request) {
+        try {
+            return httpClient.send(request, bodyMapper.receiving(type));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private HttpRequest.Builder GET(URI uri) {
         return HttpRequest.newBuilder(uri).GET();
     }
 
-    private static HttpRequest.Builder POST(URI uri, String json) {
+    private <T> HttpRequest.Builder POST(URI uri, T json) {
         return HttpRequest
             .newBuilder(uri)
-            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .POST(bodyMapper.sending(json))
             .header("content-type", "application/json");
     }
 }

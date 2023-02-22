@@ -19,12 +19,14 @@ public class HabitsApiController {
 
     @PostMapping("/api/habits")
     @ResponseStatus(HttpStatus.CREATED)
-    void addHabit(@RequestBody HabitCreateRequest request, Principal principal) {
+    HabitCreateResponse addHabit(@RequestBody HabitCreateRequest request, Principal principal) {
         habits.save(Habit.create(
             principal.getName(),
             request.description()
         ));
+        return new HabitCreateResponse();
     }
 
     private record HabitCreateRequest(String description) {}
+    private record HabitCreateResponse() {}
 }
