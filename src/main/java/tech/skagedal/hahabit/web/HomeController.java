@@ -5,14 +5,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import tech.skagedal.hahabit.model.Achievement;
 import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
@@ -47,18 +45,8 @@ public class HomeController {
 
     @PostMapping("/habit/{habitId}/{date}/achieve")
     ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
-        doAchieve(principal, achieveForm.date(), achieveForm.habitId());
+        habitService.achieve(principal, achieveForm.date(), achieveForm.habitId());
         return new ModelAndView(new RedirectView("/"));
-    }
-
-    private void doAchieve(Principal principal, LocalDate date, Long habitId) {
-        if (!habitService.userOwnsHabitWithId(principal.getName(), habitId)) {
-            throw new AccessDeniedException("Unknown habit");
-        }
-        achievements.save(Achievement.create(
-            date,
-            habitId
-        ));
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
