@@ -17,13 +17,16 @@ import tech.skagedal.hahabit.model.Achievement;
 import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
+import tech.skagedal.hahabit.service.HabitService;
 
 @Controller
 public class HomeController {
+    private final HabitService habitService;
     private final HabitRepository habits;
     private final AchievementRepository achievements;
 
-    public HomeController(HabitRepository habits, AchievementRepository achievements) {
+    public HomeController(HabitService habitService, HabitRepository habits, AchievementRepository achievements) {
+        this.habitService = habitService;
         this.habits = habits;
         this.achievements = achievements;
     }
