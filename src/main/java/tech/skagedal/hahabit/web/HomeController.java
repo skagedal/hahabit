@@ -47,14 +47,18 @@ public class HomeController {
 
     @PostMapping("/habit/{habitId}/{date}/achieve")
     ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
-        if (!habitService.userOwnsHabitWithId(principal.getName(), achieveForm.habitId(), this)) {
+        doAchieve(principal, achieveForm.date(), achieveForm.habitId());
+        return new ModelAndView(new RedirectView("/"));
+    }
+
+    private void doAchieve(Principal principal, LocalDate date, Long habitId) {
+        if (!habitService.userOwnsHabitWithId(principal.getName(), habitId)) {
             throw new AccessDeniedException("Unknown habit");
         }
         achievements.save(Achievement.create(
-            achieveForm.date(),
-            achieveForm.habitId()
+            date,
+            habitId
         ));
-        return new ModelAndView(new RedirectView("/"));
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {

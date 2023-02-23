@@ -16,7 +16,7 @@ public class HabitService {
         this.achievements = achievements;
     }
 
-    public boolean userOwnsHabitWithId(String userName, Long habitId, HomeController homeController) {
+    public boolean userOwnsHabitWithId(String userName, Long habitId) {
         return habits.findById(habitId)
             .map(habit -> Objects.equals(habit.ownedBy(), userName))
             .orElse(false);
