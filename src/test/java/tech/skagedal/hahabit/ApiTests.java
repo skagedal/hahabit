@@ -17,6 +17,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import tech.skagedal.hahabit.http.BodyMapper;
+import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
@@ -71,7 +72,7 @@ public class ApiTests {
 
 
     @Test
-    void create_habit() {
+    void create_habit_and_achieve_it() {
         final var username = testDataManager.createRandomUser();
 
         final var habitsBefore = getHabits(username);
@@ -81,14 +82,36 @@ public class ApiTests {
 
         final var habitsAfter = getHabits(username);
         assertThat(habitsAfter).hasSize(1);
-        assertThat(habitsAfter.get(0)).extracting(Habit::description).isEqualTo("Go for a walk");
+        final var habit = habitsAfter.get(0);
+        assertThat(habit.description()).isEqualTo("Go for a walk");
+
+        String date = "2020-01-01";
+
+        // Get habits-for-date before achieving
+        final var habitsForDateBefore = getHabitsForDate(username, date);
+        assertThat(habitsForDateBefore).hasSize(1);
+        final var habitForDate = habitsForDateBefore.get(0);
+        assertThat(habitForDate.description()).isEqualTo("Go for a walk");
+        assertThat(habitForDate.achievementId()).isNull();
+
+        // Achieve habit
+        achieveHabit(username, habit.id(), date);
+
+        // Get habits-for-date after achieving
+        final var habitsForDateAfter = getHabitsForDate(username, date);
+        assertThat(habitsForDateAfter).hasSize(1);
+        final var habitForDateAfter = habitsForDateAfter.get(0);
+        assertThat(habitForDateAfter.description()).isEqualTo("Go for a walk");
+        assertThat(habitForDateAfter.achievementId()).isNotNull();
+
     }
+
 
     // Client methods
 
     record Habit(Long id, String description) { }
 
-    void createHabit(String username, String description) {
+    private void createHabit(String username, String description) {
         record Request(String description) { }
         record Response() { }
 
@@ -105,12 +128,43 @@ public class ApiTests {
         assertThat(response.statusCode()).isEqualTo(201);
     }
 
-    List<Habit> getHabits(String username) {
+    private List<Habit> getHabits(String username) {
         record GetHabitsResponse(List<Habit> habits) { }
 
         final var response = sendReceiving(
             GetHabitsResponse.class,
             GET(uri("/api/habits"))
+                .header("Authorization", testDataManager.authHeader(username))
+                .build()
+        );
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        return response.body().habits;
+    }
+
+    private void achieveHabit(String username, Long habitId, String date) {
+        record Request() { }
+        record Response() { }
+
+        final var response = sendReceiving(
+            Response.class,
+            POST(
+                uri("/api/habits/" + habitId + "/" + date + "/achieve"),
+                new Request()
+            )
+                .header("Authorization", testDataManager.authHeader(username))
+                .build()
+        );
+
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    private List<HabitForDate> getHabitsForDate(String username, String date) {
+        record  GetHabitsForDateResponse(List<HabitForDate> habits) { }
+
+        final var response = sendReceiving(
+            GetHabitsForDateResponse.class,
+            GET(uri("/api/habits/" + date))
                 .header("Authorization", testDataManager.authHeader(username))
                 .build()
         );
