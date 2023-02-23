@@ -2,12 +2,15 @@ package tech.skagedal.hahabit.service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import tech.skagedal.hahabit.model.Achievement;
+import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.repository.AchievementRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
+import tech.skagedal.hahabit.web.HomeController;
 
 @Service
 public class HabitService {
@@ -33,5 +36,9 @@ public class HabitService {
         return habits.findById(habitId)
             .map(habit -> Objects.equals(habit.ownedBy(), userName))
             .orElse(false);
+    }
+
+    public List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
+        return habits.findHabitsForDate(principal.getName(), date);
     }
 }
