@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -48,7 +47,7 @@ public class HomeController {
 
     @PostMapping("/habit/{habitId}/{date}/achieve")
     ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
-        if (!userOwnsHabitWithId(principal.getName(), achieveForm.habitId())) {
+        if (!habitService.userOwnsHabitWithId(principal.getName(), achieveForm.habitId(), this)) {
             throw new AccessDeniedException("Unknown habit");
         }
         achievements.save(Achievement.create(
@@ -56,12 +55,6 @@ public class HomeController {
             achieveForm.habitId()
         ));
         return new ModelAndView(new RedirectView("/"));
-    }
-
-    private boolean userOwnsHabitWithId(String userName, Long habitId) {
-        return habits.findById(habitId)
-            .map(habit -> Objects.equals(habit.ownedBy(), userName))
-            .orElse(false);
     }
 
     private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date) {
