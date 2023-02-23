@@ -84,6 +84,7 @@ public class ApiTests {
         assertThat(habitsAfter).hasSize(1);
         final var habit = habitsAfter.get(0);
         assertThat(habit.description()).isEqualTo("Go for a walk");
+        assertThat(habit.id()).isNotNull();
 
         String date = "2020-01-01";
 
@@ -103,7 +104,6 @@ public class ApiTests {
         final var habitForDateAfter = habitsForDateAfter.get(0);
         assertThat(habitForDateAfter.description()).isEqualTo("Go for a walk");
         assertThat(habitForDateAfter.achievementId()).isNotNull();
-
     }
 
 
@@ -149,7 +149,7 @@ public class ApiTests {
         final var response = sendReceiving(
             Response.class,
             POST(
-                uri("/api/habits/" + habitId + "/" + date + "/achieve"),
+                uri("/api/habits/" + date + "/" + habitId + "/achieve"),
                 new Request()
             )
                 .header("Authorization", testDataManager.authHeader(username))
