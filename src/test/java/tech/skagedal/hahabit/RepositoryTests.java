@@ -45,12 +45,8 @@ class RepositoryTests {
     }
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     @Transactional
-    void createHabitAndAchievement() {
+    void create_habit_and_achievement() {
         final var username = testDataManager.createRandomUser();
 
         final var habit = habits.save(Habit.create(
