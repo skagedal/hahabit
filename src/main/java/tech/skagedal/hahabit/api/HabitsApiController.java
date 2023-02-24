@@ -37,16 +37,15 @@ public class HabitsApiController {
 
     @PostMapping("/api/habits")
     @ResponseStatus(HttpStatus.CREATED)
-    HabitCreateResponse addHabit(@RequestBody HabitCreateRequest request, Principal principal) {
+    EmptyResponse addHabit(@RequestBody HabitCreateRequest request, Principal principal) {
         habits.save(Habit.create(
             principal.getName(),
             request.description()
         ));
-        return new HabitCreateResponse();
+        return new EmptyResponse();
     }
 
     private record HabitCreateRequest(String description) {}
-    private record HabitCreateResponse() {}
 
     @GetMapping("/api/habits/{date}")
     ListHabitsForDateResponse listHabitsForDate(Principal principal, @PathVariable LocalDate date) {
