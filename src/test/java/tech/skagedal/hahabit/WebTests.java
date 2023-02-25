@@ -54,7 +54,7 @@ public class WebTests {
     }
 
     @Test
-    void can_login_add_a_habit_and_achieve_it() throws IOException {
+    void can_login_add_a_habit_and_track_it() throws IOException {
         final var username = testDataManager.createRandomUser();
 
         final HtmlPage start = webClient.getPage(url("/"));
@@ -91,15 +91,15 @@ public class WebTests {
         final HtmlPage home = homeLink.click();
 
         // Achieve the habit
-        final HtmlForm addAchievementForm = home.getForms().get(0);
-        final HtmlSubmitInput achieveHabit = addAchievementForm.getFirstByXPath("//input[@type='submit']");
-        assertThat(achieveHabit.isDisabled()).isFalse();
+        final HtmlForm trackingForm = home.getForms().get(0);
+        final HtmlSubmitInput trackHabit = trackingForm.getFirstByXPath("//input[@type='submit']");
+        assertThat(trackHabit.isDisabled()).isFalse();
 
-        final HtmlPage pageAfterAchievedHabit = achieveHabit.click();
+        final HtmlPage pageAfterTrackingHabit = trackHabit.click();
 
-        final HtmlForm addAchievementFormAfterAchieved = pageAfterAchievedHabit.getForms().get(0);
-        final HtmlSubmitInput achieveHabitAfterAchieved = addAchievementFormAfterAchieved.getFirstByXPath("//input[@type='submit']");
-        assertThat(achieveHabitAfterAchieved.isDisabled()).isTrue();
+        final HtmlForm trackingFormAfterTracked = pageAfterTrackingHabit.getForms().get(0);
+        final HtmlSubmitInput trackHabitAfterTracked = trackingFormAfterTracked.getFirstByXPath("//input[@type='submit']");
+        assertThat(trackHabitAfterTracked.isDisabled()).isTrue();
     }
 
     // Helpers

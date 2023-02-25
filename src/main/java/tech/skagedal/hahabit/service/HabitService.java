@@ -6,27 +6,26 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import tech.skagedal.hahabit.model.Achievement;
+import tech.skagedal.hahabit.model.Trackings;
 import tech.skagedal.hahabit.model.HabitForDate;
-import tech.skagedal.hahabit.repository.AchievementRepository;
+import tech.skagedal.hahabit.repository.TrackingRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
-import tech.skagedal.hahabit.web.HomeController;
 
 @Service
 public class HabitService {
     private final HabitRepository habits;
-    private final AchievementRepository achievements;
+    private final TrackingRepository trackings;
 
-    public HabitService(HabitRepository habits, AchievementRepository achievements) {
+    public HabitService(HabitRepository habits, TrackingRepository trackings) {
         this.habits = habits;
-        this.achievements = achievements;
+        this.trackings = trackings;
     }
 
-    public void achieve(Principal principal, LocalDate date, Long habitId) {
+    public void track(Principal principal, LocalDate date, Long habitId) {
         if (!userOwnsHabitWithId(principal.getName(), habitId)) {
             throw new AccessDeniedException("Unknown habit");
         }
-        achievements.save(Achievement.create(
+        trackings.save(Trackings.create(
             date,
             habitId
         ));

@@ -56,9 +56,9 @@ public class HabitsApiController {
 
     private record ListHabitsForDateResponse(List<HabitForDate> habits) { }
 
-    @PostMapping("/api/habits/{date}/{habitId}/achieve")
-    EmptyResponse achieveHabit(Principal principal, @PathVariable LocalDate date, @PathVariable Long habitId) {
-        habitService.achieve(
+    @PostMapping("/api/habits/{date}/{habitId}/track")
+    EmptyResponse trackHabit(Principal principal, @PathVariable LocalDate date, @PathVariable Long habitId) {
+        habitService.track(
             principal,
             date,
             habitId

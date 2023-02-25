@@ -7,9 +7,9 @@ public record HabitForDate(
     Long habitId,
     String description,
     LocalDate date,
-    @Nullable Long achievementId
+    @Nullable Long trackingId
 ) {
-    public boolean isAchieved() {
-        return achievementId != null;
+    public boolean isTracked() {
+        return trackingId != null;
     }
 }

@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "achievements")
-public record Achievement(
+@Table(name = "trackings")
+public record Trackings(
     @Id Long id,
-    Long achievingHabit,
+    Long habitId,
     LocalDate date
 ) {
-    public static Achievement create(LocalDate date, Long achievingHabit) {
-        return new Achievement(null, achievingHabit, date);
+    public static Trackings create(LocalDate date, Long habitId) {
+        return new Trackings(null, habitId, date);
     }
 }

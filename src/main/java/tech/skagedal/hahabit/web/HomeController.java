@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import tech.skagedal.hahabit.repository.AchievementRepository;
+import tech.skagedal.hahabit.repository.TrackingRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.service.HabitService;
 
@@ -18,7 +18,7 @@ import tech.skagedal.hahabit.service.HabitService;
 public class HomeController {
     private final HabitService habitService;
 
-    public HomeController(HabitService habitService, HabitRepository habits, AchievementRepository achievements) {
+    public HomeController(HabitService habitService) {
         this.habitService = habitService;
     }
 
@@ -35,11 +35,11 @@ public class HomeController {
         );
     }
 
-    private record AchieveForm(Long habitId, LocalDate date) {}
+    private record TrackingForm(Long habitId, LocalDate date) {}
 
-    @PostMapping("/habit/{habitId}/{date}/achieve")
-    ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
-        habitService.achieve(principal, achieveForm.date(), achieveForm.habitId());
+    @PostMapping("/habit/{habitId}/{date}/track")
+    ModelAndView track(Principal principal, TrackingForm trackingForm) {
+        habitService.track(principal, trackingForm.date(), trackingForm.habitId());
         return new ModelAndView(new RedirectView("/"));
     }
 

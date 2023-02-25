@@ -72,7 +72,7 @@ public class ApiTests {
 
 
     @Test
-    void create_habit_and_achieve_it() {
+    void create_habit_and_track_it() {
         final var username = testDataManager.createRandomUser();
 
         final var habitsBefore = getHabits(username);
@@ -88,22 +88,22 @@ public class ApiTests {
 
         String date = "2020-01-01";
 
-        // Get habits-for-date before achieving
+        // Get habits-for-date before tracking
         final var habitsForDateBefore = getHabitsForDate(username, date);
         assertThat(habitsForDateBefore).hasSize(1);
         final var habitForDate = habitsForDateBefore.get(0);
         assertThat(habitForDate.description()).isEqualTo("Go for a walk");
-        assertThat(habitForDate.achievementId()).isNull();
+        assertThat(habitForDate.trackingId()).isNull();
 
-        // Achieve habit
-        achieveHabit(username, habit.id(), date);
+        // Track habit
+        trackHabit(username, habit.id(), date);
 
-        // Get habits-for-date after achieving
+        // Get habits-for-date after tracking
         final var habitsForDateAfter = getHabitsForDate(username, date);
         assertThat(habitsForDateAfter).hasSize(1);
         final var habitForDateAfter = habitsForDateAfter.get(0);
         assertThat(habitForDateAfter.description()).isEqualTo("Go for a walk");
-        assertThat(habitForDateAfter.achievementId()).isNotNull();
+        assertThat(habitForDateAfter.trackingId()).isNotNull();
     }
 
 
@@ -142,14 +142,14 @@ public class ApiTests {
         return response.body().habits;
     }
 
-    private void achieveHabit(String username, Long habitId, String date) {
+    private void trackHabit(String username, Long habitId, String date) {
         record Request() { }
         record Response() { }
 
         final var response = sendReceiving(
             Response.class,
             POST(
-                uri("/api/habits/" + date + "/" + habitId + "/achieve"),
+                uri("/api/habits/" + date + "/" + habitId + "/track"),
                 new Request()
             )
                 .header("Authorization", testDataManager.authHeader(username))

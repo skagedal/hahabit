@@ -20,15 +20,15 @@
     <section id="habits">
         <h2 th:text="${date}">1970-01-02</h2>
         <div th:each="habit: ${habits}">
-            <form th:if="${habit.achieved}">
+            <form th:if="${habit.tracked}">
                 <input
                         type="submit"
                         value="Take a walk"
                         th:value="${habit.description}" disabled="true"
                 >
             </form>
-            <form th:unless="${habit.achieved}"
-                  th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
+            <form th:unless="${habit.tracked}"
+                  th:action="@{/habit/{habitId}/{date}/track(habitId=${habit.habitId},date=${date})}" method="post">
                 <input type="submit" value="Eat food" th:value="${habit.description}">
             </form>
         </div>

@@ -12,9 +12,9 @@ public interface HabitRepository extends CrudRepository<Habit, Long> {
     List<Habit> findAllByOwnedBy(String user);
     @Query("""
         SELECT habit.id AS habit_id, habit.description,
-               (SELECT id as achievement_id
-                FROM achievements a
-                WHERE a.achieving_habit = habit.id AND a.date = :date)
+               (SELECT id as tracking_id
+                FROM trackings t
+                WHERE t.habit_id = habit.id AND t.date = :date)
         FROM habits habit
         WHERE habit.owned_by = :user;
         """)

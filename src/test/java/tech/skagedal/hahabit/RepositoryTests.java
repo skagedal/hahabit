@@ -14,9 +14,9 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import tech.skagedal.hahabit.model.Achievement;
+import tech.skagedal.hahabit.model.Trackings;
 import tech.skagedal.hahabit.model.Habit;
-import tech.skagedal.hahabit.repository.AchievementRepository;
+import tech.skagedal.hahabit.repository.TrackingRepository;
 import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
@@ -30,7 +30,7 @@ class RepositoryTests {
     HabitRepository habits;
 
     @Autowired
-    AchievementRepository achievements;
+    TrackingRepository trackings;
 
     private TestDataManager testDataManager;
 
@@ -46,7 +46,7 @@ class RepositoryTests {
 
     @Test
     @Transactional
-    void create_habit_and_achievement() {
+    void create_habit_and_track_it() {
         final var username = testDataManager.createRandomUser();
 
         final var habit = habits.save(Habit.create(
@@ -59,16 +59,16 @@ class RepositoryTests {
             Duration.between(fetchedHabit.createdAt(), Instant.now()).getSeconds() < 5
         );
 
-        achievements.save(Achievement.create(
+        trackings.save(Trackings.create(
             LocalDate.of(2023, 1, 5),
             habit.id()
         ));
-        achievements.save(Achievement.create(
+        trackings.save(Trackings.create(
             LocalDate.of(2023, 1, 6),
             habit.id()
         ));
 
-        final var allAchievements = achievements.findAllByAchievingHabit(habit.id());
-        assertEquals(2, allAchievements.size());
+        final var allTrackings = trackings.findAllByHabitId(habit.id());
+        assertEquals(2, allTrackings.size());
     }
 }
