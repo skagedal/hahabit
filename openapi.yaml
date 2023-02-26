@@ -36,11 +36,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Habit'
+              $ref: '#/components/schemas/HabitCreateRequest'
         required: true
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                properties: {}
         '400':
           description: Bad Request
         '401':
@@ -51,13 +55,23 @@ components:
       type: object
       properties:
         id:
+          type: integer
+          example: 53
+        ownedBy:
           type: string
-          format: uuid
+          example: simon
         description:
           type: string
-        created_at:
+          example: Do the dishes
+        createdAt:
           type: string
           format: date-time
+    HabitCreateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          example: Brush my teeth
     ListHabitsResponse:
       type: array
       items:
