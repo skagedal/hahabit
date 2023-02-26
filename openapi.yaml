@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info:
+  title: Hahabit API
+  description: API for the Hahabit Habit Tracker
+  version: 0.1.0
+servers:
+  - url: 'https://hahabit.skagedal.tech/api'
+    description: Production
+  - url: 'http://localhost:8080/api'
+    description: Local
+paths:
+  /habits:
+    get:
+      summary: Get all habits
+      description: Get all habits
+      operationId: getHabits
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Habit'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create a new habit
+      description: Create a new habit
+      operationId: createHabit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Habit'
+        required: true
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    Habit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    ListHabitsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Habit'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
