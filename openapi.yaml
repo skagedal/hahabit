@@ -11,6 +11,8 @@ servers:
 paths:
   /habits:
     get:
+      tags:
+        - Hahabit
       summary: Get all habits
       description: Get all habits
       operationId: getHabits
@@ -29,6 +31,8 @@ paths:
         '401':
           description: Unauthorized
     post:
+      tags:
+        - Hahabit
       summary: Create a new habit
       description: Create a new habit
       operationId: createHabit
@@ -41,6 +45,68 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                properties: {}
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+  /habits/{date}:
+    get:
+      tags:
+        - Hahabit
+      summary: Get all habits for a specific date
+      description: Get all habits for a specific date
+      operationId: getHabitsForDate
+      parameters:
+        - name: date
+          in: path
+          description: The date to get habits for
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  habits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HabitForDate'
+        '401':
+          description: Unauthorized
+  /habits/{date}/{habitId}/track:
+    post:
+      tags:
+        - Hahabit
+      summary: Track a habit for a specific date
+      description: Track a habit for a specific date
+      operationId: trackHabit
+      parameters:
+        - name: date
+          in: path
+          description: The date to track the habit for
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: habitId
+          in: path
+          description: The habit to track
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tracked
           content:
             application/json:
               schema:
@@ -81,6 +147,24 @@ components:
       properties:
         message:
           type: string
+    HabitForDate:
+      type: object
+      properties:
+        habitId:
+          type: integer
+          format: int64
+          example: 124
+        description:
+          type: string
+          example: Do the dishes
+        date:
+          type: string
+          format: date
+        trackingId:
+          type: integer
+          format: int64
+          nullable: true
+          example: 123
   securitySchemes:
     basicAuth:
       type: http
