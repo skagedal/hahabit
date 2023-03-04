@@ -75,6 +75,7 @@ paths:
             application/json:
               schema:
                 type: object
+                required: [habits]
                 properties:
                   habits:
                     type: array
@@ -134,6 +135,7 @@ components:
           format: date-time
     HabitCreateRequest:
       type: object
+      required: [description]
       properties:
         description:
           type: string
@@ -149,6 +151,7 @@ components:
           type: string
     HabitForDate:
       type: object
+      required: [habitId, description, date, trackingId]
       properties:
         habitId:
           type: integer
