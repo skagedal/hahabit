@@ -11,7 +11,7 @@ import tech.skagedal.hahabit.model.HabitForDate;
 public interface HabitRepository extends CrudRepository<Habit, Long> {
     List<Habit> findAllByOwnedBy(String user);
     @Query("""
-        SELECT habit.id AS habit_id, habit.description,
+        SELECT habit.id AS habit_id, habit.description, date(:date) as date,
                (SELECT id as tracking_id
                 FROM trackings t
                 WHERE t.habit_id = habit.id AND t.date = :date)

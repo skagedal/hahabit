@@ -104,6 +104,7 @@ public class ApiTests {
         final var habitForDateAfter = habitsForDateAfter.get(0);
         assertThat(habitForDateAfter.description()).isEqualTo("Go for a walk");
         assertThat(habitForDateAfter.trackingId()).isNotNull();
+        assertThat(habitForDateAfter.date()).isEqualTo(date);
     }
 
 
