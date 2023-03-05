@@ -2,10 +2,11 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.0.3'
-	id "com.gorylenko.gradle-git-properties" version "2.4.1"
-	id "com.github.ben-manes.versions" version '0.46.0'
 	id 'jacoco'
+	id 'org.springframework.boot' version '3.0.3'
+	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
+	id 'org.openapi.generator' version '6.3.0'
+	id 'com.github.ben-manes.versions' version '0.46.0'
 }
 
 group = 'tech.skagedal'
