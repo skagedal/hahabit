@@ -9,6 +9,10 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.api.HahabitApi;
+import org.openapitools.client.model.HabitCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
@@ -70,6 +74,28 @@ public class ApiTests {
             .hasValue(uri("/login").toString());
     }
 
+
+    @Test
+    void use_generated_client() throws ApiException {
+        final var username = testDataManager.createRandomUser();
+
+        final var apiClient = new ApiClient()
+            .setRequestInterceptor(builder -> builder.header("Authorization", testDataManager.authHeader(username)))
+            .setScheme("http")
+            .setHost("127.0.0.1")
+            .setPort(servletContext.getWebServer().getPort());
+        final var api = new HahabitApi(apiClient);
+
+        final var habitsBefore = api.getHabits();
+        assertThat(habitsBefore.getHabits()).isEmpty();
+
+        final var habitCreateRequest = new HabitCreateRequest();
+        habitCreateRequest.setDescription("Go for a walk");
+        api.createHabit(habitCreateRequest);
+
+        final var habitsAfter = api.getHabits();
+        assertThat(habitsAfter.getHabits()).hasSize(1);
+    }
 
     @Test
     void create_habit_and_track_it() {

@@ -39,6 +39,9 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
 	testImplementation('net.sourceforge.htmlunit:htmlunit:2.70.0')
+
+	// Requirements of the openapi-generator generated code that aren't already given to us by Spring
+	testImplementation "org.openapitools:jackson-databind-nullable:0.2.1"
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -65,3 +68,23 @@ openApiValidate {
 }
 
 check.dependsOn tasks.openApiValidate
+
+openApiGenerate {
+	inputSpec = 'openapi.yaml'
+	generatorName = 'java'
+	outputDir = "${buildDir}/generated/sources/openapi"
+	configOptions = [
+		library: 'native',
+		useJakartaEe: 'true'
+	]
+}
+
+compileTestJava.dependsOn tasks.openApiGenerate
+
+sourceSets {
+	test {
+		java {
+			srcDir "${buildDir}/generated/sources/openapi/src/main/java"
+		}
+	}
+}
