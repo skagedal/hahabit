@@ -140,15 +140,6 @@ components:
         description:
           type: string
           example: Brush my teeth
-    ListHabitsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/Habit'
-    Error:
-      type: object
-      properties:
-        message:
-          type: string
     HabitForDate:
       type: object
       required: [habitId, description, date, trackingId]
