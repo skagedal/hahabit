@@ -63,3 +63,5 @@ jacocoTestReport {
 openApiValidate {
 	inputSpec = 'openapi.yaml'
 }
+
+check.dependsOn tasks.openApiValidate
