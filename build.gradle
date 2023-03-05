@@ -1,4 +1,5 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
 	id 'java'
@@ -69,7 +70,7 @@ openApiValidate {
 
 check.dependsOn tasks.openApiValidate
 
-openApiGenerate {
+def generateHahabitApi = tasks.register('generateHahabitApi', GenerateTask) {
 	inputSpec = 'openapi.yaml'
 	generatorName = 'java'
 	outputDir = "${buildDir}/generated/sources/openapi"
@@ -79,12 +80,13 @@ openApiGenerate {
 	]
 }
 
-compileTestJava.dependsOn tasks.openApiGenerate
+compileTestJava.dependsOn generateHahabitApi
 
 sourceSets {
 	test {
 		java {
-			srcDir "${buildDir}/generated/sources/openapi/src/main/java"
+			// Wbat to put here? Can't do `generateHahabitApi.outputDir` since `generateHahabitApi` is a task provider.
+			srcDir "${generateHahabitApi}/src/main/java"
 		}
 	}
 }
