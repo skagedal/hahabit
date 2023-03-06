@@ -7,6 +7,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiClient;
@@ -79,12 +80,7 @@ public class ApiTests {
     void use_generated_client() throws ApiException {
         final var username = testDataManager.createRandomUser();
 
-        final var apiClient = new ApiClient()
-            .setRequestInterceptor(builder -> builder.header("Authorization", testDataManager.authHeader(username)))
-            .setScheme("http")
-            .setHost("127.0.0.1")
-            .setPort(servletContext.getWebServer().getPort());
-        final var api = new HahabitApi(apiClient);
+        final var api = hahabitApi(username);
 
         final var habitsBefore = api.getHabits();
         assertThat(habitsBefore.getHabits()).isEmpty();
@@ -132,7 +128,6 @@ public class ApiTests {
         assertThat(habitForDateAfter.trackingId()).isNotNull();
         assertThat(habitForDateAfter.date()).isEqualTo(date);
     }
-
 
     // Client methods
 
@@ -231,5 +226,16 @@ public class ApiTests {
             .newBuilder(uri)
             .POST(bodyMapper.sending(json))
             .header("content-type", "application/json");
+    }
+
+    // Generated API
+
+    @NotNull
+    private HahabitApi hahabitApi(String username) {
+        return new HahabitApi(new ApiClient()
+            .setRequestInterceptor(builder -> builder.header("Authorization", testDataManager.authHeader(username)))
+            .setScheme("http")
+            .setHost("127.0.0.1")
+            .setPort(servletContext.getWebServer().getPort()));
     }
 }
