@@ -25,7 +25,7 @@ import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ApiTests {
+public class HabitApiTests {
     @Autowired
     UserDetailsManager userDetailsManager;
 
