@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
-import org.openapitools.client.api.HahabitApi;
+import org.openapitools.client.api.HabitApi;
 import org.openapitools.client.model.HabitCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import tech.skagedal.hahabit.http.BodyMapper;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
@@ -75,7 +74,7 @@ public class ApiTests {
     void create_habit_and_track_it() throws ApiException {
         final var username = testDataManager.createRandomUser();
 
-        final var api = hahabitApi(username);
+        final var api = habitApi(username);
 
         final var habitsBefore = api.getHabits();
         assertThat(habitsBefore.getHabits()).isEmpty();
@@ -131,8 +130,8 @@ public class ApiTests {
     // Generated API
 
     @NotNull
-    private HahabitApi hahabitApi(String username) {
-        return new HahabitApi(new ApiClient()
+    private HabitApi habitApi(String username) {
+        return new HabitApi(new ApiClient()
             .setRequestInterceptor(builder -> builder.header("Authorization", testDataManager.authHeader(username)))
             .setScheme("http")
             .setHost("127.0.0.1")

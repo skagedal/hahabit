@@ -12,7 +12,7 @@ paths:
   /habits:
     get:
       tags:
-        - Hahabit
+        - Habit
       summary: Get all habits
       description: Get all habits
       operationId: getHabits
@@ -32,7 +32,7 @@ paths:
           description: Unauthorized
     post:
       tags:
-        - Hahabit
+        - Habit
       summary: Create a new habit
       description: Create a new habit
       operationId: createHabit
@@ -56,7 +56,7 @@ paths:
   /habits/{date}:
     get:
       tags:
-        - Hahabit
+        - Habit
       summary: Get all habits for a specific date
       description: Get all habits for a specific date
       operationId: getHabitsForDate
@@ -86,7 +86,7 @@ paths:
   /habits/{date}/{habitId}/track:
     post:
       tags:
-        - Hahabit
+        - Habit
       summary: Track a habit for a specific date
       description: Track a habit for a specific date
       operationId: trackHabit
@@ -114,6 +114,31 @@ paths:
                 properties: {}
         '400':
           description: Bad Request
+        '401':
+          description: Unauthorized
+  /users:
+    get:
+      tags:
+        - User
+      summary: Get all users
+      description: Get all users. Only available to admins.
+      operationId: getUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                          example: simon
         '401':
           description: Unauthorized
 components:
