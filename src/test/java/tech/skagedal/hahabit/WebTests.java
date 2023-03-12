@@ -15,33 +15,21 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
 @HahabitTest
 public class WebTests {
     @Autowired
-    UserDetailsManager userDetailsManager;
-
-    @Autowired
     private ServletWebServerApplicationContext servletContext;
 
+    @Autowired
     private TestDataManager testDataManager;
 
     private final WebClient webClient = new WebClient();
-
-    @BeforeEach
-    void setupTestDataManager() {
-        testDataManager = new TestDataManager(userDetailsManager);
-    }
 
     @AfterEach
     void closeWebClient() {

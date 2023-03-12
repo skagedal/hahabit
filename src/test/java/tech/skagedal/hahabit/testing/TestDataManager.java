@@ -5,7 +5,9 @@ import java.util.UUID;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TestDataManager {
     public static String PASSWORD = "password";
 

@@ -8,7 +8,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
@@ -17,28 +16,20 @@ import org.openapitools.client.model.HabitCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.provisioning.UserDetailsManager;
 import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
 @HahabitTest
 public class HabitApiTests {
     @Autowired
-    UserDetailsManager userDetailsManager;
-
-    @Autowired
     private ServletWebServerApplicationContext servletContext;
 
+    @Autowired
     private TestDataManager testDataManager;
 
     private final HttpClient httpClient = HttpClient.newBuilder()
         .version(HttpClient.Version.HTTP_1_1)
         .build();
-
-    @BeforeEach
-    void setupTestDataManager() {
-        testDataManager = new TestDataManager(userDetailsManager);
-    }
 
     @Test
     void apis_get_unauthorized_response() {

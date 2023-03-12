@@ -6,19 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import tech.skagedal.hahabit.model.Trackings;
 import tech.skagedal.hahabit.model.Habit;
-import tech.skagedal.hahabit.repository.TrackingRepository;
+import tech.skagedal.hahabit.model.Trackings;
 import tech.skagedal.hahabit.repository.HabitRepository;
+import tech.skagedal.hahabit.repository.TrackingRepository;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
@@ -26,20 +22,13 @@ import tech.skagedal.hahabit.testing.TestDataManager;
 @ExtendWith(Containers.RegisterDatasourceExtension.class)
 class RepositoryTests {
     @Autowired
-    UserDetailsManager userDetailsManager;
-
-    @Autowired
     HabitRepository habits;
 
     @Autowired
     TrackingRepository trackings;
 
+    @Autowired
     private TestDataManager testDataManager;
-
-    @BeforeEach
-    void setupTestDataManager() {
-        testDataManager = new TestDataManager(userDetailsManager);
-    }
 
     @Test
     @Transactional
