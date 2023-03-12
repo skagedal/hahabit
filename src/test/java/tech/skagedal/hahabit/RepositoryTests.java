@@ -7,31 +7,28 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import tech.skagedal.hahabit.model.Habit;
 import tech.skagedal.hahabit.model.Trackings;
 import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.repository.TrackingRepository;
-import tech.skagedal.hahabit.testing.Containers;
+import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
-@SpringBootTest
-@ExtendWith(Containers.RegisterDatasourceExtension.class)
+@HahabitTest
 class RepositoryTests {
-    @Autowired
-    HabitRepository habits;
+    private final HabitRepository habits;
 
-    @Autowired
-    TrackingRepository trackings;
+    private final TrackingRepository trackings;
+    private final TestDataManager testDataManager;
 
-    @Autowired
-    private TestDataManager testDataManager;
+    RepositoryTests(@Autowired HabitRepository habits, @Autowired TrackingRepository trackings, @Autowired TestDataManager testDataManager) {
+        this.habits = habits;
+        this.trackings = trackings;
+        this.testDataManager = testDataManager;
+    }
 
     @Test
-    @Transactional
     void create_habit_and_track_it() {
         final var username = testDataManager.createRandomUser();
 

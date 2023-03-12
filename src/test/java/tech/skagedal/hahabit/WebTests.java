@@ -11,25 +11,23 @@ import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
+import tech.skagedal.hahabit.testing.TestServer;
 
 @HahabitTest
 public class WebTests {
-    @Autowired
-    private ServletWebServerApplicationContext servletContext;
-
-    @Autowired
-    private TestDataManager testDataManager;
-
+    private final TestServer server;
+    private final TestDataManager testDataManager;
     private final WebClient webClient = new WebClient();
+
+    public WebTests(@Autowired TestServer server, @Autowired TestDataManager testDataManager) {
+        this.server = server;
+        this.testDataManager = testDataManager;
+    }
 
     @AfterEach
     void closeWebClient() {
@@ -40,7 +38,7 @@ public class WebTests {
     void can_login_add_a_habit_and_track_it() throws IOException {
         final var username = testDataManager.createRandomUser();
 
-        final HtmlPage start = webClient.getPage(url("/"));
+        final HtmlPage start = webClient.getPage(server.url("/"));
 
         // Log in
         final HtmlForm signInForm = start.getForms().get(0);
@@ -84,19 +82,4 @@ public class WebTests {
         final HtmlSubmitInput trackHabitAfterTracked = trackingFormAfterTracked.getFirstByXPath("//input[@type='submit']");
         assertThat(trackHabitAfterTracked.isDisabled()).isTrue();
     }
-
-    // Helpers
-
-    private URL url(String path) {
-        try {
-            return uri(path).toURL();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private URI uri(String path) {
-        return URI.create("http://127.0.0.1:" + servletContext.getWebServer().getPort() + path);
-    }
-
 }
