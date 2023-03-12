@@ -15,16 +15,13 @@ import org.openapitools.client.ApiException;
 import org.openapitools.client.api.HabitApi;
 import org.openapitools.client.model.HabitCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import tech.skagedal.hahabit.testing.Containers;
+import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@HahabitTest
 public class HabitApiTests {
     @Autowired
     UserDetailsManager userDetailsManager;
@@ -41,11 +38,6 @@ public class HabitApiTests {
     @BeforeEach
     void setupTestDataManager() {
         testDataManager = new TestDataManager(userDetailsManager);
-    }
-
-    @DynamicPropertySource
-    static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
-        Containers.registerDynamicProperties(registry);
     }
 
     @Test

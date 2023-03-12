@@ -1,6 +1,7 @@
 package tech.skagedal.hahabit.testing;
 
-import org.springframework.test.context.DynamicPropertyRegistry;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class Containers {
@@ -19,9 +20,13 @@ public class Containers {
         return postgreSQLContainer;
     }
 
-    public static void registerDynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> postgres().getJdbcUrl());
-        registry.add("spring.datasource.username", () -> postgres().getUsername());
-        registry.add("spring.datasource.password", () -> postgres().getPassword());
+    public static class RegisterDatasourceExtension implements BeforeAllCallback {
+        @Override
+        public void beforeAll(ExtensionContext context) {
+            final var postgres = postgres();
+            System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
+            System.setProperty("spring.datasource.username", postgres.getUsername());
+            System.setProperty("spring.datasource.password", postgres.getPassword());
+        }
     }
 }

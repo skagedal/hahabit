@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -22,6 +23,7 @@ import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
 @SpringBootTest
+@ExtendWith(Containers.RegisterDatasourceExtension.class)
 class RepositoryTests {
     @Autowired
     UserDetailsManager userDetailsManager;
@@ -37,11 +39,6 @@ class RepositoryTests {
     @BeforeEach
     void setupTestDataManager() {
         testDataManager = new TestDataManager(userDetailsManager);
-    }
-
-    @DynamicPropertySource
-    static void registerPostgreSQLProperties(DynamicPropertyRegistry registry) {
-        Containers.registerDynamicProperties(registry);
     }
 
     @Test
