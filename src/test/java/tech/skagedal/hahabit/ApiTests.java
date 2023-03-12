@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
+import java.time.LocalDate;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import tech.skagedal.hahabit.http.BodyMapper;
-import tech.skagedal.hahabit.model.HabitForDate;
 import tech.skagedal.hahabit.testing.Containers;
 import tech.skagedal.hahabit.testing.TestDataManager;
 
@@ -33,9 +32,6 @@ public class ApiTests {
 
     @Autowired
     private ServletWebServerApplicationContext servletContext;
-
-    @Autowired
-    private BodyMapper bodyMapper;
 
     private TestDataManager testDataManager;
 
@@ -75,9 +71,8 @@ public class ApiTests {
             .hasValue(uri("/login").toString());
     }
 
-
     @Test
-    void use_generated_client() throws ApiException {
+    void create_habit_and_track_it() throws ApiException {
         final var username = testDataManager.createRandomUser();
 
         final var api = hahabitApi(username);
@@ -91,108 +86,28 @@ public class ApiTests {
 
         final var habitsAfter = api.getHabits();
         assertThat(habitsAfter.getHabits()).hasSize(1);
-    }
+        final var habit = habitsAfter.getHabits().get(0);
+        assertThat(habit.getDescription()).isEqualTo("Go for a walk");
+        assertThat(habit.getId()).isNotNull();
 
-    @Test
-    void create_habit_and_track_it() {
-        final var username = testDataManager.createRandomUser();
+        final var date = LocalDate.of(2020, 1, 1);
 
-        final var habitsBefore = getHabits(username);
-        assertThat(habitsBefore).isEmpty();
-
-        createHabit(username, "Go for a walk");
-
-        final var habitsAfter = getHabits(username);
-        assertThat(habitsAfter).hasSize(1);
-        final var habit = habitsAfter.get(0);
-        assertThat(habit.description()).isEqualTo("Go for a walk");
-        assertThat(habit.id()).isNotNull();
-
-        String date = "2020-01-01";
-
-        // Get habits-for-date before tracking
-        final var habitsForDateBefore = getHabitsForDate(username, date);
-        assertThat(habitsForDateBefore).hasSize(1);
-        final var habitForDate = habitsForDateBefore.get(0);
-        assertThat(habitForDate.description()).isEqualTo("Go for a walk");
-        assertThat(habitForDate.trackingId()).isNull();
+        final var habitsForDateBefore = api.getHabitsForDate(date);
+        assertThat(habitsForDateBefore.getHabits()).hasSize(1);
+        final var habitForDate = habitsForDateBefore.getHabits().get(0);
+        assertThat(habitForDate.getDescription()).isEqualTo("Go for a walk");
+        assertThat(habitForDate.getTrackingId()).isNull();
 
         // Track habit
-        trackHabit(username, habit.id(), date);
+        api.trackHabit(date, habit.getId());
 
         // Get habits-for-date after tracking
-        final var habitsForDateAfter = getHabitsForDate(username, date);
-        assertThat(habitsForDateAfter).hasSize(1);
-        final var habitForDateAfter = habitsForDateAfter.get(0);
-        assertThat(habitForDateAfter.description()).isEqualTo("Go for a walk");
-        assertThat(habitForDateAfter.trackingId()).isNotNull();
-        assertThat(habitForDateAfter.date()).isEqualTo(date);
-    }
-
-    // Client methods
-
-    record Habit(Long id, String description) { }
-
-    private void createHabit(String username, String description) {
-        record Request(String description) { }
-        record Response() { }
-
-        final var response = sendReceiving(
-            Response.class,
-            POST(
-                uri("/api/habits"),
-                new Request(description)
-            )
-                .header("Authorization", testDataManager.authHeader(username))
-                .build()
-        );
-
-        assertThat(response.statusCode()).isEqualTo(201);
-    }
-
-    private List<Habit> getHabits(String username) {
-        record GetHabitsResponse(List<Habit> habits) { }
-
-        final var response = sendReceiving(
-            GetHabitsResponse.class,
-            GET(uri("/api/habits"))
-                .header("Authorization", testDataManager.authHeader(username))
-                .build()
-        );
-
-        assertThat(response.statusCode()).isEqualTo(200);
-        return response.body().habits;
-    }
-
-    private void trackHabit(String username, Long habitId, String date) {
-        record Request() { }
-        record Response() { }
-
-        final var response = sendReceiving(
-            Response.class,
-            POST(
-                uri("/api/habits/" + date + "/" + habitId + "/track"),
-                new Request()
-            )
-                .header("Authorization", testDataManager.authHeader(username))
-                .build()
-        );
-
-        assertThat(response.statusCode()).isEqualTo(200);
-    }
-
-    private List<HabitForDate> getHabitsForDate(String username, String date) {
-        record  GetHabitsForDateResponse(List<HabitForDate> habits) { }
-
-        final var response = sendReceiving(
-            GetHabitsForDateResponse.class,
-            GET(uri("/api/habits/" + date))
-                .header("Authorization", testDataManager.authHeader(username))
-                .build()
-        );
-
-        assertThat(response.statusCode()).isEqualTo(200);
-        return response.body().habits;
+        final var habitsForDateAfter = api.getHabitsForDate(date);
+        assertThat(habitsForDateAfter.getHabits()).hasSize(1);
+        final var habitForDateAfter = habitsForDateAfter.getHabits().get(0);
+        assertThat(habitForDateAfter.getDescription()).isEqualTo("Go for a walk");
+        assertThat(habitForDateAfter.getTrackingId()).isNotNull();
+        assertThat(habitForDateAfter.getDate()).isEqualTo(date);
     }
 
     // Helpers
@@ -209,23 +124,8 @@ public class ApiTests {
         }
     }
 
-    private <T> HttpResponse<T> sendReceiving(Class<T> type, HttpRequest request) {
-        try {
-            return httpClient.send(request, bodyMapper.receiving(type));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private HttpRequest.Builder GET(URI uri) {
         return HttpRequest.newBuilder(uri).GET();
-    }
-
-    private <T> HttpRequest.Builder POST(URI uri, T json) {
-        return HttpRequest
-            .newBuilder(uri)
-            .POST(bodyMapper.sending(json))
-            .header("content-type", "application/json");
     }
 
     // Generated API

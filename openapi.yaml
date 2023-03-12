@@ -123,6 +123,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           example: 53
         ownedBy:
           type: string
