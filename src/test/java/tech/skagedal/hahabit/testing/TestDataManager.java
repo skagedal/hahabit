@@ -4,6 +4,7 @@ import java.net.http.HttpRequest;
 import java.util.Base64;
 import java.util.UUID;
 import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -21,12 +22,21 @@ public class TestDataManager {
     }
 
     public String createRandomUser() {
+        return createRandomUserWithRole("USER");
+    }
+
+    public String createAdminUser() {
+        return createRandomUserWithRole("ADMIN");
+    }
+
+    @NotNull
+    private String createRandomUserWithRole(String... role) {
         final var passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         final var username = UUID.randomUUID().toString();
         final var user = User.builder().passwordEncoder(passwordEncoder::encode)
             .username(username)
             .password(PASSWORD)
-            .roles("USER")
+            .roles(role)
             .build();
         userDetailsManager.createUser(user);
         return username;

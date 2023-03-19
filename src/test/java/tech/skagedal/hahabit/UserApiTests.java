@@ -1,6 +1,8 @@
 package tech.skagedal.hahabit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,11 +29,20 @@ public class UserApiTests {
         final var username = testDataManager.createRandomUser();
         final var api = userApi(username);
 
-        final var thrown = catchThrowable(api::getUsers);
-        assertThat(thrown)
-            .isInstanceOf(ApiException.class)
-            .matches(e -> ((ApiException) e).getCode() == 403, "is 403 Forbidden");
+        assertThatExceptionOfType(ApiException.class)
+            .isThrownBy(api::getUsers)
+            .matches(exception -> exception.getCode() == 403, "is 403 Forbidden");
     }
+
+    @Test
+    void admin_user_can_list_habits() {
+        final var username = testDataManager.createAdminUser();
+        final var api = userApi(username);
+
+        assertThatNoException()
+            .isThrownBy(api::getUsers);
+    }
+
 
     @NotNull
     private UserApi userApi(String username) {
