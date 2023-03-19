@@ -121,7 +121,7 @@ paths:
       tags:
         - User
       summary: Get all users
-      description: Get all users. Only available to admins.
+      description: Get all users. Only available to admins. Not implemented.
       operationId: getUsers
       responses:
         '200':
