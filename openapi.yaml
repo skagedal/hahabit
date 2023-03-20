@@ -116,13 +116,19 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
-  /users:
+  /users/{username}:
     get:
       tags:
         - User
-      summary: Get all users
-      description: Get all users. Only available to admins. Not implemented.
-      operationId: getUsers
+      summary: Get a specific user
+      description: Get a specific user. Only available to admins. Really only checks that the user exists.
+      operationId: getUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -131,16 +137,36 @@ paths:
               schema:
                 type: object
                 properties:
-                  users:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        username:
-                          type: string
-                          example: simon
+                  username:
+                    type: string
+                    example: simon
         '401':
           description: Unauthorized
+        '404':
+          description: No such user exists.
+    post:
+      tags:
+        - User
+      summary: Create a user
+      description: Create a new user.
+      operationId: createUser
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: OK
+
 components:
   schemas:
     Habit:
