@@ -3,8 +3,9 @@ package tech.skagedal.hahabit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
+import java.util.UUID;
+import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiException;
@@ -25,28 +26,40 @@ public class UserApiTests {
     }
 
     @Test
-    void regular_user_can_not_list_habits() {
+    void regular_user_can_not_get_user() {
         final var username = testDataManager.createRandomUser();
         final var api = userApi(username);
 
         assertThatExceptionOfType(ApiException.class)
-            .isThrownBy(api::getUsers)
-            .matches(exception -> exception.getCode() == 403, "is 403 Forbidden");
+            .isThrownBy(() -> api.getUser(username))
+            .matches(havingStatusCode(403), "is 403 Forbidden");
     }
 
     @Test
-    void admin_user_can_list_habits() {
+    void admin_user_can_get_user_that_exists() {
         final var username = testDataManager.createAdminUser();
         final var api = userApi(username);
 
         assertThatNoException()
-            .isThrownBy(api::getUsers);
+            .isThrownBy(() -> api.getUser(username));
     }
 
+    @Test
+    void admin_user_get_404_for_user_that_does_not_exist() {
+        final var username = testDataManager.createAdminUser();
+        final var api = userApi(username);
+
+        assertThatExceptionOfType(ApiException.class)
+            .isThrownBy(() -> api.getUser(UUID.randomUUID().toString()))
+            .matches(havingStatusCode(404), "is 404 Not Found");
+    }
 
     @NotNull
     private UserApi userApi(String username) {
         return new UserApi(server.getApiClient(testDataManager.authorizer(username)));
     }
 
+    private static Predicate<ApiException> havingStatusCode(int code) {
+        return exception -> exception.getCode() == code;
+    }
 }
