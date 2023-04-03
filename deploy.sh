@@ -8,8 +8,8 @@ if [ -n "$(git status --porcelain)" ]; then
     exit 1
 fi
 
-echo "👋 Building JAR with Java 19..."
-export JAVA_HOME=$(/usr/libexec/java_home -v 19)
+echo "👋 Building JAR with Java 20..."
+export JAVA_HOME=$(/usr/libexec/java_home -v 20)
 ./gradlew clean bootJar
 
 echo
