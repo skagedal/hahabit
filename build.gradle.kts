@@ -1,12 +1,12 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-	id "java"
-	id "jacoco"
-	id "org.springframework.boot" version "3.0.6"
-	id "com.gorylenko.gradle-git-properties" version "2.4.1"
-	id "org.openapi.generator" version "6.5.0"
-	id "com.github.ben-manes.versions" version "0.46.0"
+	java
+	jacoco
+	id("org.springframework.boot") version "3.0.6"
+	id("com.gorylenko.gradle-git-properties") version "2.4.1"
+	id("org.openapi.generator") version "6.5.0"
+	id("com.github.ben-manes.versions") version "0.46.0"
 }
 
 group = "tech.skagedal"
@@ -16,9 +16,7 @@ repositories {
 	mavenCentral()
 }
 
-ext {
-	set("testcontainersVersion", "1.18.0")
-}
+private val testcontainersVersion = "1.18.0"
 
 dependencies {
 	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
@@ -48,46 +46,52 @@ java {
 		// When upgrading Java version, first make sure that it is available on the server.
 		// See: https://blog.skagedal.tech/2023/01/01/writing-a-habit-tracker.html
 
-		languageVersion = JavaLanguageVersion.of(20)
+		languageVersion.set(JavaLanguageVersion.of(20))
 	}
 }
 
-tasks.withType(JavaCompile).configureEach {
-	options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+tasks.compileJava {
+	options.compilerArgs.add("-Xlint:unchecked")
+	options.compilerArgs.add("-Werror")
 }
 
-tasks.named("test") {
+tasks.test {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
-test {
-	finalizedBy(jacocoTestReport)
-}
-
-jacocoTestReport {
-	dependsOn(test)
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
 	reports {
-		csv.required = true
+		csv.required.set(true)
 	}
 }
 
-openApiValidate {
-	inputSpec = "openapi.yaml"
+jacoco {
+	toolVersion = "0.8.9"
 }
 
-check.dependsOn(tasks.openApiValidate)
+tasks.openApiValidate {
+	inputSpec.set("openapi.yaml")
+}
+
+tasks.check {
+	dependsOn(tasks.openApiValidate)
+}
 
 openApiGenerate {
-	inputSpec = "openapi.yaml"
-	generatorName = "java"
-	outputDir = "${buildDir}/generated/sources/openapi"
-	configOptions = [
-		library: "native",
-		useJakartaEe: "true"
-	]
+	inputSpec.set("openapi.yaml")
+	generatorName.set("java")
+	outputDir.set("${buildDir}/generated/sources/openapi")
+	configOptions.set(mapOf(
+		"library" to "native",
+		"useJakartaEe" to "true"
+	))
 }
 
-compileTestJava.dependsOn(tasks.openApiGenerate)
+tasks.compileTestJava {
+	dependsOn(tasks.openApiGenerate)
+}
 
 sourceSets {
 	test {
@@ -97,6 +101,3 @@ sourceSets {
 	}
 }
 
-jacoco {
-	toolVersion = "0.8.9"
-}
