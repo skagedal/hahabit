@@ -22,25 +22,25 @@ ext {
 
 dependencies {
 	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
-	implementation "org.springframework.boot:spring-boot-starter-data-jdbc"
-	implementation "org.springframework.boot:spring-boot-starter-security"
-	implementation "org.springframework.boot:spring-boot-starter-web"
-	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
-	implementation "org.springframework.boot:spring-boot-starter-actuator"
-	implementation "org.springframework.session:spring-session-jdbc"
-	implementation "org.flywaydb:flyway-core"
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.session:spring-session-jdbc")
+	implementation("org.flywaydb:flyway-core")
 	// Because of https://github.com/spring-projects/spring-framework/issues/25095
-	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-	runtimeOnly "org.postgresql:postgresql"
-	testImplementation "org.springframework.boot:spring-boot-starter-test"
-	testImplementation "org.springframework.security:spring-security-test"
-	testImplementation "org.testcontainers:junit-jupiter"
-	testImplementation "org.testcontainers:postgresql"
+	compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.testcontainers:postgresql")
 	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
 	testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")
 
 	// Requirements of the openapi-generator generated code that aren't already given to us by Spring
-	testImplementation "org.openapitools:jackson-databind-nullable:0.2.6"
+	testImplementation("org.openapitools:jackson-databind-nullable:0.2.6")
 }
 
 java {
@@ -61,11 +61,11 @@ tasks.named("test") {
 }
 
 test {
-	finalizedBy jacocoTestReport
+	finalizedBy(jacocoTestReport)
 }
 
 jacocoTestReport {
-	dependsOn test
+	dependsOn(test)
 	reports {
 		csv.required = true
 	}
@@ -75,7 +75,7 @@ openApiValidate {
 	inputSpec = "openapi.yaml"
 }
 
-check.dependsOn tasks.openApiValidate
+check.dependsOn(tasks.openApiValidate)
 
 openApiGenerate {
 	inputSpec = "openapi.yaml"
@@ -87,12 +87,12 @@ openApiGenerate {
 	]
 }
 
-compileTestJava.dependsOn tasks.openApiGenerate
+compileTestJava.dependsOn(tasks.openApiGenerate)
 
 sourceSets {
 	test {
 		java {
-			srcDir "${buildDir}/generated/sources/openapi/src/main/java"
+			srcDir("${buildDir}/generated/sources/openapi/src/main/java")
 		}
 	}
 }
