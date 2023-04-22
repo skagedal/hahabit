@@ -11,7 +11,6 @@ plugins {
 
 group = 'tech.skagedal'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '20'
 
 repositories {
 	mavenCentral()
@@ -42,6 +41,12 @@ dependencies {
 
 	// Requirements of the openapi-generator generated code that aren't already given to us by Spring
 	testImplementation "org.openapitools:jackson-databind-nullable:0.2.6"
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(20)
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -87,4 +92,8 @@ sourceSets {
 			srcDir "${buildDir}/generated/sources/openapi/src/main/java"
 		}
 	}
+}
+
+jacoco {
+	toolVersion = "0.8.9"
 }
