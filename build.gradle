@@ -1,43 +1,43 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-	id 'java'
-	id 'jacoco'
-	id 'org.springframework.boot' version '3.0.6'
-	id 'com.gorylenko.gradle-git-properties' version '2.4.1'
-	id 'org.openapi.generator' version '6.5.0'
-	id 'com.github.ben-manes.versions' version '0.46.0'
+	id "java"
+	id "jacoco"
+	id "org.springframework.boot" version "3.0.6"
+	id "com.gorylenko.gradle-git-properties" version "2.4.1"
+	id "org.openapi.generator" version "6.5.0"
+	id "com.github.ben-manes.versions" version "0.46.0"
 }
 
-group = 'tech.skagedal'
-version = '0.0.1-SNAPSHOT'
+group = "tech.skagedal"
+version = "0.0.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
 }
 
 ext {
-	set('testcontainersVersion', "1.18.0")
+	set("testcontainersVersion", "1.18.0")
 }
 
 dependencies {
 	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.session:spring-session-jdbc'
-	implementation 'org.flywaydb:flyway-core'
+	implementation "org.springframework.boot:spring-boot-starter-data-jdbc"
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation "org.springframework.session:spring-session-jdbc"
+	implementation "org.flywaydb:flyway-core"
 	// Because of https://github.com/spring-projects/spring-framework/issues/25095
-	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
-	runtimeOnly 'org.postgresql:postgresql'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.testcontainers:junit-jupiter'
-	testImplementation 'org.testcontainers:postgresql'
+	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+	runtimeOnly "org.postgresql:postgresql"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testImplementation "org.springframework.security:spring-security-test"
+	testImplementation "org.testcontainers:junit-jupiter"
+	testImplementation "org.testcontainers:postgresql"
 	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
-	testImplementation('net.sourceforge.htmlunit:htmlunit:2.70.0')
+	testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")
 
 	// Requirements of the openapi-generator generated code that aren't already given to us by Spring
 	testImplementation "org.openapitools:jackson-databind-nullable:0.2.6"
@@ -56,7 +56,7 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs << "-Xlint:unchecked" << "-Werror"
 }
 
-tasks.named('test') {
+tasks.named("test") {
 	useJUnitPlatform()
 }
 
@@ -72,18 +72,18 @@ jacocoTestReport {
 }
 
 openApiValidate {
-	inputSpec = 'openapi.yaml'
+	inputSpec = "openapi.yaml"
 }
 
 check.dependsOn tasks.openApiValidate
 
 openApiGenerate {
-	inputSpec = 'openapi.yaml'
-	generatorName = 'java'
+	inputSpec = "openapi.yaml"
+	generatorName = "java"
 	outputDir = "${buildDir}/generated/sources/openapi"
 	configOptions = [
-		library: 'native',
-		useJakartaEe: 'true'
+		library: "native",
+		useJakartaEe: "true"
 	]
 }
 
