@@ -11,7 +11,7 @@ plugins {
 
 group = 'tech.skagedal'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '19'
+sourceCompatibility = '20'
 
 repositories {
 	mavenCentral()
