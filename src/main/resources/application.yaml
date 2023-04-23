@@ -7,3 +7,6 @@ spring.datasource:
   password: postgres
 
 management.endpoints.web.exposure.include: health,info
+
+hahabit.summary:
+  days: 100
