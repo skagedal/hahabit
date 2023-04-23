@@ -10,15 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import tech.skagedal.hahabit.repository.TrackingRepository;
-import tech.skagedal.hahabit.repository.HabitRepository;
 import tech.skagedal.hahabit.service.HabitService;
 
 @Controller
-public class HomeController {
+public class HabitTrackerController {
     private final HabitService habitService;
 
-    public HomeController(HabitService habitService) {
+    public HabitTrackerController(HabitService habitService) {
         this.habitService = habitService;
     }
 
