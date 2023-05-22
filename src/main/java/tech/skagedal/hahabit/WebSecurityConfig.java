@@ -24,15 +24,14 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().ignoringRequestMatchers(request ->
-                request.getRequestURI().startsWith("/api"))
-            .and()
+            .csrf(csrf -> csrf.ignoringRequestMatchers(request ->
+                request.getRequestURI().startsWith("/api")))
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/actuator/*").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(Customizer.withDefaults())
-            .httpBasic();
+            .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
