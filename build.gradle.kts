@@ -16,7 +16,7 @@ repositories {
 	mavenCentral()
 }
 
-private val testcontainersVersion = "1.18.1"
+private val testcontainersVersion = "1.18.3"
 
 dependencies {
 	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
