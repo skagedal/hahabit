@@ -10,9 +10,14 @@ public record Habit(
     @Id Long id,
     String ownedBy,
     String description,
+    Long position,
     @ReadOnlyProperty Instant createdAt
 ) {
     public static Habit create(String ownedBy, String description) {
-        return new Habit(null, ownedBy, description, null);
+        return new Habit(null, ownedBy, description, 0L, null);
+    }
+
+    public Habit withPosition(long newPosition) {
+        return new Habit(id, ownedBy, description, newPosition, createdAt);
     }
 }
