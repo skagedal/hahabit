@@ -1,17 +1,25 @@
 package tech.skagedal.hahabit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.ARRAY;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.HabitApi;
+import org.openapitools.client.model.Habit;
 import org.openapitools.client.model.HabitCreateRequest;
+import org.openapitools.client.model.HabitReorderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import tech.skagedal.hahabit.testing.HahabitTest;
@@ -63,9 +71,7 @@ public class HabitApiTests {
         final var habitsBefore = api.getHabits();
         assertThat(habitsBefore.getHabits()).isEmpty();
 
-        final var habitCreateRequest = new HabitCreateRequest();
-        habitCreateRequest.setDescription("Go for a walk");
-        api.createHabit(habitCreateRequest);
+        createHabit(api, "Go for a walk");
 
         final var habitsAfter = api.getHabits();
         assertThat(habitsAfter.getHabits()).hasSize(1);
@@ -93,7 +99,44 @@ public class HabitApiTests {
         assertThat(habitForDateAfter.getDate()).isEqualTo(date);
     }
 
+    @Test
+    void reorder_habits() throws ApiException {
+        final var username = testDataManager.createRandomUser();
+        final var api = habitApi(username);
+
+        // Create two habits, "Brush teeth" and "Breakfast".
+
+        createHabit(api, "Brush teeth");
+        createHabit(api, "Breakfast");
+
+        // They appear in the order of creation
+
+        final var habits = api.getHabits().getHabits();
+        assertThat(habits.stream().map(Habit::getDescription))
+            .containsExactly("Brush teeth", "Breakfast");
+
+        // But we should eat breakfast before we brush teeth! Reorder the items.
+
+        final var ids = habits.stream().map(Habit::getId).collect(Collectors.toCollection(ArrayList::new));
+        Collections.reverse(ids);
+        final var reorderRequest = new HabitReorderRequest();
+        reorderRequest.setOrder(ids);
+        api.reorderHabits(reorderRequest);
+
+        // Now they appear in the proper order.
+
+        final var reorderedHabits = api.getHabits().getHabits();
+        assertThat(reorderedHabits.stream().map(Habit::getDescription))
+            .containsExactly("Breakfast", "Brush teeth");
+    }
+
     // Helpers
+
+    private static void createHabit(HabitApi api, String description) throws ApiException {
+        final var habitCreateRequest = new HabitCreateRequest();
+        habitCreateRequest.setDescription(description);
+        api.createHabit(habitCreateRequest);
+    }
 
     private HttpResponse<String> send(HttpRequest request) {
         try {

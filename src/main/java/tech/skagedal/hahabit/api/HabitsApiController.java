@@ -47,6 +47,14 @@ public class HabitsApiController {
 
     private record HabitCreateRequest(String description) {}
 
+    @PostMapping("/api/habits-reorder")
+    EmptyResponse reorderHabits(@RequestBody HabitReorderRequest request, Principal principal) {
+        habitService.reorderHabits(principal, request.order());
+        return new EmptyResponse();
+    }
+
+    private record HabitReorderRequest(List<Long> order) {}
+
     @GetMapping("/api/habits/{date}")
     ListHabitsForDateResponse listHabitsForDate(Principal principal, @PathVariable LocalDate date) {
         return new ListHabitsForDateResponse(

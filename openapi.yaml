@@ -23,6 +23,7 @@ paths:
             application/json:
               schema:
                 type: object
+                required: [habits]
                 properties:
                   habits:
                     type: array
@@ -53,6 +54,31 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+  /habits-reorder:
+    post:
+      tags:
+        - Habit
+      summary: Change the order of your habits
+      description: Reorder your habits. Given an array of habit ID:s, it will make sure that the habits are returned in this order in subsequent requests. It is assumed that all habits are included in the array; the order of habits not included relative to the ones included will be undefined.
+      operationId: reorderHabits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HabitReorderRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties: {}
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+
   /habits/{date}:
     get:
       tags:
@@ -192,6 +218,17 @@ components:
         description:
           type: string
           example: Brush my teeth
+    HabitReorderRequest:
+      type: object
+      required: [order]
+      properties:
+        order:
+          type: array
+          items:
+            type: integer
+            format: int64
+            example: 53
+          example: [53,23,43]
     HabitForDate:
       type: object
       required: [habitId, description, date, trackingId]
