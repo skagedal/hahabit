@@ -1,3 +1,4 @@
 logging.level:
   org.springframework.security: debug
   org.springframework.web: debug
+  org.springframework.jdbc.core: trace
