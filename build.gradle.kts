@@ -6,7 +6,7 @@ plugins {
 	id("org.springframework.boot") version "3.1.3"
 	id("com.gorylenko.gradle-git-properties") version "2.4.1"
 	id("org.openapi.generator") version "7.0.0"
-	id("com.github.ben-manes.versions") version "0.47.0"
+	id("com.github.ben-manes.versions") version "0.48.0"
 }
 
 group = "tech.skagedal"
