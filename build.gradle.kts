@@ -82,7 +82,7 @@ tasks.check {
 openApiGenerate {
 	inputSpec.set("openapi.yaml")
 	generatorName.set("java")
-	outputDir.set("${buildDir}/generated/sources/openapi")
+    outputDir.set(layout.buildDirectory.dir("generated/sources/openapi").get().toString())
 	configOptions.set(mapOf(
 		"library" to "native",
 		"useJakartaEe" to "true"
@@ -96,7 +96,7 @@ tasks.compileTestJava {
 sourceSets {
 	test {
 		java {
-			srcDir("${buildDir}/generated/sources/openapi/src/main/java")
+			srcDir(layout.buildDirectory.dir("generated/sources/openapi/src/main/java"))
 		}
 	}
 }
