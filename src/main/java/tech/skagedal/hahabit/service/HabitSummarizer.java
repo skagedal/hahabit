@@ -15,6 +15,7 @@ public class HabitSummarizer {
     return "You have done " + habit + " " + configuration.days() + " days in a row!";
   }
 
+  @SuppressWarnings("java:S106")
   public static void main(String[] args) {
     System.out.println(DataSize.ofMegabytes(1).toBytes());
   }

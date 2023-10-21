@@ -1,17 +1,17 @@
 package tech.skagedal.hahabit.service;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import tech.skagedal.hahabit.model.Habit;
+import tech.skagedal.hahabit.model.HabitForDate;
+import tech.skagedal.hahabit.model.Trackings;
+import tech.skagedal.hahabit.repository.HabitRepository;
+import tech.skagedal.hahabit.repository.TrackingRepository;
+
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import tech.skagedal.hahabit.model.Habit;
-import tech.skagedal.hahabit.model.Trackings;
-import tech.skagedal.hahabit.model.HabitForDate;
-import tech.skagedal.hahabit.repository.TrackingRepository;
-import tech.skagedal.hahabit.repository.HabitRepository;
 
 @Service
 public class HabitService {
@@ -37,12 +37,6 @@ public class HabitService {
             final var habit = ownedHabit(principal.getName(), habitId);
             habits.save(habit.withPosition(position++));
         }
-    }
-
-    private boolean userOwnsHabitWithId(String userName, Long habitId) {
-        return habits.findById(habitId)
-            .map(habit -> Objects.equals(habit.ownedBy(), userName))
-            .orElse(false);
     }
 
     private Habit ownedHabit(String userName, Long habitId) {

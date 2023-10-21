@@ -74,5 +74,6 @@ public class HabitsApiController {
         return new EmptyResponse();
     }
 
+    @SuppressWarnings("java:S2094")
     private record EmptyResponse() { }
 }
