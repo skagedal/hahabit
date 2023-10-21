@@ -36,6 +36,7 @@ dependencies {
 	testImplementation("org.testcontainers:postgresql")
 	testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
 	testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	// Requirements of the openapi-generator generated code that aren't already given to us by Spring
 	testImplementation("org.openapitools:jackson-databind-nullable:0.2.6")
