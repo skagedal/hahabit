@@ -46,7 +46,7 @@ java {
 		// When upgrading Java version, first make sure that it is available on the server.
 		// See: https://blog.skagedal.tech/2023/01/01/writing-a-habit-tracker.html
 
-		languageVersion.set(JavaLanguageVersion.of(20))
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 }
 
