@@ -3,10 +3,10 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
 	java
 	jacoco
-	id("org.springframework.boot") version "3.1.4"
+	id("org.springframework.boot") version "3.1.5"
 	id("com.gorylenko.gradle-git-properties") version "2.4.1"
 	id("org.openapi.generator") version "7.0.1"
-	id("com.github.ben-manes.versions") version "0.48.0"
+	id("com.github.ben-manes.versions") version "0.49.0"
 }
 
 group = "tech.skagedal"
@@ -16,7 +16,7 @@ repositories {
 	mavenCentral()
 }
 
-private val testcontainersVersion = "1.19.0"
+private val testcontainersVersion = "1.19.1"
 
 dependencies {
 	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
