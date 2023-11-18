@@ -3,11 +3,12 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 plugins {
     java
     jacoco
-    id("org.springframework.boot") version "3.1.5"
-    id("com.gorylenko.gradle-git-properties") version "2.4.1"
-    id("org.openapi.generator") version "7.0.1"
-    id("com.github.ben-manes.versions") version "0.49.0"
-    id("name.remal.sonarlint") version "3.3.12"
+    alias(libs.plugins.org.springframework.boot)
+    alias(libs.plugins.com.gorylenko.gradle.git.properties)
+    alias(libs.plugins.org.openapi.generator)
+    alias(libs.plugins.com.github.ben.manes.versions)
+    alias(libs.plugins.nl.littlerobots.version.catalog.update)
+    alias(libs.plugins.name.remal.sonarlint)
 }
 
 group = "tech.skagedal"
@@ -17,10 +18,9 @@ repositories {
     mavenCentral()
 }
 
-private val testcontainersVersion = "1.19.1"
-
 dependencies {
     implementation(platform(SpringBootPlugin.BOM_COORDINATES))
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -29,18 +29,18 @@ dependencies {
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.flywaydb:flyway-core")
     // Because of https://github.com/spring-projects/spring-framework/issues/25095
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    compileOnly(libs.com.google.code.findbugs.jsr305)
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
-    testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
-    testImplementation("net.sourceforge.htmlunit:htmlunit:2.70.0")
+    testImplementation(platform(libs.org.testcontainers.testcontainers.bom))
+    testImplementation(libs.net.sourceforge.htmlunit)
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Requirements of the openapi-generator generated code that aren't already given to us by Spring
-    testImplementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    testImplementation(libs.org.openapitools.jackson.databind.nullable)
 }
 
 java {
