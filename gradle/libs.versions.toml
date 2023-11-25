@@ -1,5 +1,5 @@
 [versions]
-org-testcontainers = "1.19.2"
+org-testcontainers = "1.19.3"
 
 [libraries]
 com-google-code-findbugs-jsr305 = "com.google.code.findbugs:jsr305:3.0.2"
@@ -10,7 +10,7 @@ org-testcontainers-testcontainers-bom = { module = "org.testcontainers:testconta
 [plugins]
 com-github-ben-manes-versions = "com.github.ben-manes.versions:0.50.0"
 com-gorylenko-gradle-git-properties = "com.gorylenko.gradle-git-properties:2.4.1"
-name-remal-sonarlint = "name.remal.sonarlint:3.3.15"
+name-remal-sonarlint = "name.remal.sonarlint:3.3.16"
 nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.1"
 org-openapi-generator = "org.openapi.generator:7.1.0"
-org-springframework-boot = "org.springframework.boot:3.1.5"
+org-springframework-boot = "org.springframework.boot:3.2.0"
