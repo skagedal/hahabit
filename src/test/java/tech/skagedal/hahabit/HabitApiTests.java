@@ -27,7 +27,7 @@ import tech.skagedal.hahabit.testing.TestDataManager;
 import tech.skagedal.hahabit.testing.TestServer;
 
 @HahabitTest
-public class HabitApiTests {
+class HabitApiTests {
     private final TestServer server;
     private final TestDataManager testDataManager;
 

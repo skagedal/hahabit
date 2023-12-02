@@ -19,7 +19,7 @@ import tech.skagedal.hahabit.testing.TestDataManager;
 import tech.skagedal.hahabit.testing.TestServer;
 
 @HahabitTest
-public class WebTests {
+class WebTests {
     private final TestServer server;
     private final TestDataManager testDataManager;
     private final WebClient webClient = new WebClient();

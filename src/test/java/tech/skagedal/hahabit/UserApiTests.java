@@ -16,7 +16,7 @@ import tech.skagedal.hahabit.testing.TestDataManager;
 import tech.skagedal.hahabit.testing.TestServer;
 
 @HahabitTest
-public class UserApiTests {
+class UserApiTests {
     private final TestDataManager testDataManager;
     private final TestServer server;
 
