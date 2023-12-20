@@ -1,9 +1,5 @@
 package tech.skagedal.hahabit.web;
 
-import java.security.Principal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import tech.skagedal.hahabit.service.HabitService;
+
+import java.security.Principal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Map;
 
 @Controller
 public class HabitTrackerController {
@@ -35,6 +36,7 @@ public class HabitTrackerController {
 
     private record TrackingForm(Long habitId, LocalDate date) {}
 
+    @SuppressWarnings("java:S6856") // this seems to not take Spring MVC form controllers into account
     @PostMapping("/habit/{habitId}/{date}/track")
     ModelAndView track(Principal principal, TrackingForm trackingForm) {
         habitService.track(principal, trackingForm.date(), trackingForm.habitId());
