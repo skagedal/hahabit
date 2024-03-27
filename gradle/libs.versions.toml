@@ -13,4 +13,4 @@ com-gorylenko-gradle-git-properties = "com.gorylenko.gradle-git-properties:2.4.1
 name-remal-sonarlint = "name.remal.sonarlint:3.4.9"
 nl-littlerobots-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
 org-openapi-generator = "org.openapi.generator:7.4.0"
-org-springframework-boot = "org.springframework.boot:3.2.3"
+org-springframework-boot = "org.springframework.boot:3.2.4"
