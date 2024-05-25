@@ -10,7 +10,7 @@ fi
 
 echo "👋 Building JAR with Java 21..."
 export JAVA_HOME=$(/usr/libexec/java_home -v 21)
-./gradlew clean bootJar
+./gradlew clean build bootJar
 
 echo
 echo "👋 Uploading JAR and run script to skagedal.tech..."
