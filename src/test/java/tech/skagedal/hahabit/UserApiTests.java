@@ -1,11 +1,5 @@
 package tech.skagedal.hahabit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-
-import java.util.UUID;
-import java.util.function.Predicate;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiException;
@@ -14,6 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import tech.skagedal.hahabit.testing.HahabitTest;
 import tech.skagedal.hahabit.testing.TestDataManager;
 import tech.skagedal.hahabit.testing.TestServer;
+
+import java.util.UUID;
+import java.util.function.Predicate;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @HahabitTest
 class UserApiTests {

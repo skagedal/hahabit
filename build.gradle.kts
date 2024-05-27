@@ -27,7 +27,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
     // Because of https://github.com/spring-projects/spring-framework/issues/25095
     compileOnly(libs.com.google.code.findbugs.jsr305)
     runtimeOnly("org.postgresql:postgresql")
