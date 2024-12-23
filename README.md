@@ -1,3 +1,5 @@
 # hahabit
 
-The beginnings of a small habit tracker, which I am blogging about at [skagedal's oboy](https://blog.skagedal.tech/).
+A small habit tracker. I blogged about the creation of this at [skagedal's oboy](https://blog.skagedal.tech/).
+
+Archived repository. 
